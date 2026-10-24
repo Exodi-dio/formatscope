@@ -42,7 +42,8 @@ function shannonEntropy(window: Uint8Array): number {
       continue;
     }
 
-    counts[symbol] += 1;
+    const current = counts[symbol] ?? 0;
+    counts[symbol] = current + 1;
   }
 
   let entropy = 0;

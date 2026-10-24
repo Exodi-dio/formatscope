@@ -54,8 +54,8 @@ describe("scanEntropy", () => {
     const first = regions[0];
     const second = regions[1];
 
-    expect(first).toEqual({ offset: 0, length: 4, entropy: 0 });
-    expect(second).toEqual({ offset: 4, length: 4, entropy: 0 });
+    expect(first!).toEqual({ offset: 0, length: 4, entropy: 0 });
+    expect(second!).toEqual({ offset: 4, length: 4, entropy: 0 });
   });
 
   it("clamps window size to the buffer length", () => {
