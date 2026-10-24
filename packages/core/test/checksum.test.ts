@@ -34,9 +34,9 @@ describe("scanChecksum", () => {
     const hypotheses = scanChecksum(bytes);
 
     expect(hypotheses).toHaveLength(1);
-    expect(hypotheses[0].offset).toBe(0);
-    expect(hypotheses[0].length).toBe(bytes.byteLength);
-    expect(hypotheses[0].confidence).toBe(0.98); // D18: verified checksum → 0.98
+    expect(hypotheses[0]!.offset).toBe(0);
+    expect(hypotheses[0]!.length).toBe(bytes.byteLength);
+    expect(hypotheses[0]!.confidence).toBe(0.98); // D18: verified checksum → 0.98
   });
 
   it("returns no hypotheses for invalid checksum", () => {

@@ -18,9 +18,9 @@ describe("scanLengthPrefix", () => {
     const hypotheses = scanLengthPrefix(bytes);
 
     expect(hypotheses).toHaveLength(1);
-    expect(hypotheses[0].offset).toBe(0);
-    expect(hypotheses[0].length).toBe(12); // 4 (header) + 8 (payload)
-    expect(hypotheses[0].confidence).toBeGreaterThan(0);
+    expect(hypotheses[0]!.offset).toBe(0);
+    expect(hypotheses[0]!.length).toBe(12); // 4 (header) + 8 (payload)
+    expect(hypotheses[0]!.confidence).toBeGreaterThan(0);
   });
 
   it("rejects length that points past file end", () => {

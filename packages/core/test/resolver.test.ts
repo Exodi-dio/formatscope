@@ -38,7 +38,7 @@ describe("resolve", () => {
     ], 100);
 
     expect(model.hypotheses).toHaveLength(1);
-    expect(model.hypotheses[0].length).toBe(16);
+    expect(model.hypotheses[0]!.length).toBe(16);
   });
 
   it("selects non-overlapping hypotheses in order", () => {
@@ -49,8 +49,8 @@ describe("resolve", () => {
     ], 100);
 
     expect(model.hypotheses).toHaveLength(2);
-    expect(model.hypotheses[0].offset).toBe(0);
-    expect(model.hypotheses[1].offset).toBe(10);
+    expect(model.hypotheses[0]!.offset).toBe(0);
+    expect(model.hypotheses[1]!.offset).toBe(10);
     expect(model.coverage).toBe(0.2);
   });
 
@@ -60,8 +60,8 @@ describe("resolve", () => {
       hyp(0, 10, 0.8),
     ], 100);
 
-    expect(model.hypotheses[0].offset).toBe(0);
-    expect(model.hypotheses[1].offset).toBe(50);
+    expect(model.hypotheses[0]!.offset).toBe(0);
+    expect(model.hypotheses[1]!.offset).toBe(50);
   });
 });
 
