@@ -115,7 +115,7 @@ function encodeField(field: Field, value: Value): Uint8Array {
     case "struct": {
       const structField = field as StructField;
       return concatBytes(
-        structField.fields.map((child, i) => encodeField(child, value.children[i])),
+        structField.fields.map((child, i) => encodeField(child, value.children[i]!)),
       );
     }
 
@@ -191,7 +191,7 @@ function decodeTlvField(field: TlvField, input: Uint8Array): TlvValue {
   return { kind: "tlv", tag, value: valueBytes.slice() };
 }
 
-function encodeTlvValue(value: TlvValue, field: TlvField): Uint8Array {
+function encodeTlvValue(value: TlvValue): Uint8Array {
   // Tag (1 byte) + length (1 byte) + value
   const lengthField = Math.min(value.value.byteLength, 255);
   return concatBytes([

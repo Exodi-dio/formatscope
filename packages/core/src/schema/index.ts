@@ -156,6 +156,6 @@ function validateField(field: Field, start: number, end: number): void {
     }
 
     default:
-      throw new Error(`unsupported field kind: ${String(field.kind)}`);
+      throw new Error("unsupported field kind");
   }
 }
