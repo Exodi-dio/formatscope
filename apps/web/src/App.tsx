@@ -160,6 +160,20 @@ export function App() {
     setHighlightedOffset(offset);
   }, []);
 
+  const loadSample = useCallback(async (path: string) => {
+    try {
+      const response = await fetch(path);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const buffer = await response.arrayBuffer();
+      const file = new File([buffer], path.split("/").pop() || "sample", {
+        type: "application/octet-stream",
+      });
+      handleFile(file);
+    } catch (err) {
+      setError(`Failed to load sample: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }, [handleFile]);
+
   return (
     <div className="app" onDragOver={handleDragOver} onDrop={handleDrop}>
       <header className="topbar">
@@ -312,6 +326,26 @@ export function App() {
             <button className="browse-button" onClick={() => inputRef.current?.click()}>
               browse
             </button>
+            <div className="samples">
+              <p style={{ margin: "16px 0 8px", fontSize: "12px", color: "#98a0ab" }}>
+                Or try a sample:
+              </p>
+              <div className="sample-buttons">
+                {[
+                  { name: "FSBX", file: "/samples/sample-fsbx.fsbx" },
+                  { name: "FSRT", file: "/samples/sample-fsrt.fsrt" },
+                  { name: "FSTL", file: "/samples/sample-fstl.fstl" },
+                ].map((sample) => (
+                  <button
+                    key={sample.name}
+                    className="sample-button"
+                    onClick={() => loadSample(sample.file)}
+                  >
+                    {sample.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </section>
         )}
       </main>
