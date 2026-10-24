@@ -1,5 +1,5 @@
 import { validateSchema } from "../schema/index";
-import type { Field, Schema } from "../schema/index";
+import type { Field, Schema, UintField, TlvField } from "../schema/index";
 
 export interface OpaqueValue {
   readonly kind: "opaque";
