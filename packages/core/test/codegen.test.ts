@@ -17,9 +17,10 @@ describe("codegen", () => {
     const result = codegen(schema);
 
     expect(result.nodeMap.length).toBeGreaterThan(0);
-    expect(result.nodeMap[0].path).toBe("root");
-    expect(typeof result.nodeMap[0].line).toBe("number");
-    expect(result.nodeMap[0].line).toBeGreaterThanOrEqual(0);
+    const first = result.nodeMap[0]!;
+    expect(first.path).toBe("root");
+    expect(typeof first.line).toBe("number");
+    expect(first.line).toBeGreaterThanOrEqual(0);
   });
 
   it("produces valid TypeScript source", () => {
