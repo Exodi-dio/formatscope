@@ -22,11 +22,11 @@ describe("scanMagic", () => {
     const hypotheses = scanMagic(bytes);
 
     expect(hypotheses).toHaveLength(1);
-    expect(hypotheses[0].kind).toBe("magic");
-    expect(hypotheses[0].offset).toBe(0);
-    expect(hypotheses[0].length).toBe(4);
-    expect(hypotheses[0].confidence).toBe(0.95);
-    expect(hypotheses[0].evidence).toEqual(["magic \"FSRT\" at offset 0"]);
+    expect(hypotheses[0]!.kind).toBe("magic");
+    expect(hypotheses[0]!.offset).toBe(0);
+    expect(hypotheses[0]!.length).toBe(4);
+    expect(hypotheses[0]!.confidence).toBe(0.95);
+    expect(hypotheses[0]!.evidence).toEqual(["magic \"FSRT\" at offset 0"]);
   });
 
   it("detects PNG magic at offset 0", () => {
@@ -34,8 +34,8 @@ describe("scanMagic", () => {
     const hypotheses = scanMagic(bytes);
 
     expect(hypotheses).toHaveLength(1);
-    expect(hypotheses[0].kind).toBe("magic");
-    expect(hypotheses[0].evidence).toEqual(["magic \"PNG\" at offset 0"]);
+    expect(hypotheses[0]!.kind).toBe("magic");
+    expect(hypotheses[0]!.evidence).toEqual(["magic \"PNG\" at offset 0"]);
   });
 
   it("returns no hypotheses for unknown magic", () => {
@@ -63,6 +63,6 @@ describe("scanMagic", () => {
     const hypotheses = scanMagic(bytes);
 
     expect(hypotheses).toHaveLength(1);
-    expect(hypotheses[0].evidence).toEqual(["magic \"PK\" at offset 0"]);
+    expect(hypotheses[0]!.evidence).toEqual(["magic \"PK\" at offset 0"]);
   });
 });
