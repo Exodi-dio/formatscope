@@ -74,8 +74,9 @@ function decodeField(field: Field, input: Uint8Array): Value {
         bytes: input.slice(field.offset, field.offset + field.length),
       };
 
-    case "uint":
+    case "uint": {
       return decodeUintField(field, input);
+    }
 
     case "ascii":
       return {
@@ -86,11 +87,12 @@ function decodeField(field: Field, input: Uint8Array): Value {
     case "tlv":
       return decodeTlvField(field, input);
 
-    case "struct":
+    case "struct": {
       return {
         kind: "struct",
         children: field.fields.map((child) => decodeField(child, input)),
       };
+    }
   }
 }
 

@@ -4,7 +4,6 @@ import {
   opaqueSchema,
   validateSchema,
   type Schema,
-  type Field,
 } from "../src/index";
 
 describe("validateSchema", () => {

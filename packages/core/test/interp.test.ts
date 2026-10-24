@@ -7,16 +7,6 @@ import {
   verifyBytes,
   type Document,
 } from "../src/index";
-
-function u32LE(value: number): Uint8Array {
-  const out = new Uint8Array(4);
-  out[0] = value & 0xff;
-  out[1] = (value >>> 8) & 0xff;
-  out[2] = (value >>> 16) & 0xff;
-  out[3] = (value >>> 24) & 0xff;
-  return out;
-}
-
 describe("interp decode/encode", () => {
   it("decodes and encodes opaque field", () => {
     const input = new Uint8Array([0x01, 0x02, 0x03, 0x04]);
