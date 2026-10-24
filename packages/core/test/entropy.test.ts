@@ -62,7 +62,8 @@ describe("scanEntropy", () => {
     const regions = scanEntropy(new Uint8Array([0, 1, 2, 3]), 16);
 
     expect(regions).toHaveLength(1);
-    expect(regions[0].offset).toBe(0);
-    expect(regions[0].length).toBe(4);
+    const first = regions[0];
+    expect(first!.offset).toBe(0);
+    expect(first!.length).toBe(4);
   });
 });
