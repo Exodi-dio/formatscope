@@ -154,5 +154,8 @@ function validateField(field: Field, start: number, end: number): void {
       }
       break;
     }
+
+    default:
+      throw new Error(`unsupported field kind: ${String(field.kind)}`);
   }
 }

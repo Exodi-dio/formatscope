@@ -1,5 +1,10 @@
 import { validateSchema } from "../schema/index";
-import type { Field, Schema, UintField, TlvField } from "../schema/index";
+import type {
+  Field,
+  Schema,
+  UintField,
+  TlvField,
+} from "../schema/index";
 
 export interface OpaqueValue {
   readonly kind: "opaque";
@@ -49,7 +54,7 @@ export function decode(schema: Schema, input: Uint8Array): Document {
 export function encode(document: Document): Uint8Array {
   validateSchema(document.schema);
 
-  const output = encodeField(document.root);
+  const output = encodeField(document.schema.root, document.root);
 
   if (output.byteLength !== document.schema.byteLength) {
     throw new RangeError("encoded length does not match schema");
@@ -66,9 +71,8 @@ function decodeField(field: Field, input: Uint8Array): Value {
         bytes: input.slice(field.offset, field.offset + field.length),
       };
 
-    case "uint": {
+    case "uint":
       return decodeUintField(field, input);
-    }
 
     case "ascii":
       return {
@@ -85,16 +89,19 @@ function decodeField(field: Field, input: Uint8Array): Value {
         children: field.fields.map((child) => decodeField(child, input)),
       };
     }
+
+    default:
+      throw new Error(`unsupported field kind: ${String(field.kind)}`);
   }
 }
 
-function encodeField(value: Value): Uint8Array {
+function encodeField(field: Field, value: Value): Uint8Array {
   switch (value.kind) {
     case "opaque":
       return value.bytes.slice();
 
     case "uint":
-      return encodeUintValue(value);
+      return encodeUintValue(value, field.length, field.order);
 
     case "ascii":
       return encodeAsciiValue(value);
@@ -102,8 +109,14 @@ function encodeField(value: Value): Uint8Array {
     case "tlv":
       return encodeTlvValue(value);
 
-    case "struct":
-      return concatBytes(value.children.map((child) => encodeField(child)));
+    case "struct": {
+      return concatBytes(
+        field.fields.map((child, i) => encodeField(child, value.children[i])),
+      );
+    }
+
+    default:
+      throw new Error(`unsupported field kind: ${String(value.kind)}`);
   }
 }
 
@@ -125,30 +138,29 @@ function decodeUintField(field: UintField, input: Uint8Array): UintValue {
   }
 }
 
-function encodeUintValue(value: UintValue): Uint8Array {
+function encodeUintValue(
+  value: UintValue,
+  length: number,
+  order: "le" | "be",
+): Uint8Array {
+  const bytes = new Uint8Array(length);
+  const isLE = order === "le";
+
   if (typeof value.value === "bigint") {
-    const bytes = new Uint8Array(8);
-    const isLE = true; // default
     writeU64(bytes, 0, value.value, isLE);
-    return bytes.subarray(0, 8);
+    return bytes;
   }
 
   const num = value.value as number;
-  if (num <= 0xff) {
-    return new Uint8Array([num]);
+  if (isLE) {
+    for (let i = 0; i < length; i += 1) {
+      bytes[i] = (num >>> (BigInt(i) * 8n)) & 0xff;
+    }
+  } else {
+    for (let i = 0; i < length; i += 1) {
+      bytes[i] = (num >>> (BigInt(length - 1 - i) * 8n)) & 0xff;
+    }
   }
-  if (num <= 0xffff) {
-    const bytes = new Uint8Array(2);
-    writeU16(bytes, 0, num, true);
-    return bytes;
-  }
-  if (num <= 0xffffffff) {
-    const bytes = new Uint8Array(4);
-    writeU32(bytes, 0, num, true);
-    return bytes;
-  }
-  const bytes = new Uint8Array(8);
-  writeU64(bytes, 0, BigInt(num), true);
   return bytes;
 }
 
@@ -176,7 +188,6 @@ function decodeTlvField(field: TlvField, input: Uint8Array): TlvValue {
 }
 
 function encodeTlvValue(value: TlvValue): Uint8Array {
-  // Tag (1 byte) + value
   return concatBytes([new Uint8Array([value.tag]), value.value]);
 }
 
@@ -191,21 +202,11 @@ function readU16BE(bytes: Uint8Array): number {
 }
 
 function readU32LE(bytes: Uint8Array): number {
-  return (
-    bytes[0]! |
-    (bytes[1]! << 8) |
-    (bytes[2]! << 16) |
-    (bytes[3]! << 24)
-  );
+  return bytes[0]! | (bytes[1]! << 8) | (bytes[2]! << 16) | (bytes[3]! << 24);
 }
 
 function readU32BE(bytes: Uint8Array): number {
-  return (
-    (bytes[0]! << 24) |
-    (bytes[1]! << 16) |
-    (bytes[2]! << 8) |
-    bytes[3]!
-  );
+  return (bytes[0]! << 24) | (bytes[1]! << 16) | (bytes[2]! << 8) | bytes[3]!;
 }
 
 function readU64LE(bytes: Uint8Array): bigint {
@@ -225,30 +226,6 @@ function readU64BE(bytes: Uint8Array): bigint {
 }
 
 // --- Integer write helpers ---
-
-function writeU16(bytes: Uint8Array, offset: number, value: number, isLE: boolean): void {
-  if (isLE) {
-    bytes[offset] = value & 0xff;
-    bytes[offset + 1] = (value >>> 8) & 0xff;
-  } else {
-    bytes[offset] = (value >>> 8) & 0xff;
-    bytes[offset + 1] = value & 0xff;
-  }
-}
-
-function writeU32(bytes: Uint8Array, offset: number, value: number, isLE: boolean): void {
-  if (isLE) {
-    bytes[offset] = value & 0xff;
-    bytes[offset + 1] = (value >>> 8) & 0xff;
-    bytes[offset + 2] = (value >>> 16) & 0xff;
-    bytes[offset + 3] = (value >>> 24) & 0xff;
-  } else {
-    bytes[offset] = (value >>> 24) & 0xff;
-    bytes[offset + 1] = (value >>> 16) & 0xff;
-    bytes[offset + 2] = (value >>> 8) & 0xff;
-    bytes[offset + 3] = value & 0xff;
-  }
-}
 
 function writeU64(bytes: Uint8Array, offset: number, value: bigint, isLE: boolean): void {
   for (let i = 0; i < 8; i += 1) {
