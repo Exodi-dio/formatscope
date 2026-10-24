@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { scanEntropy, type EntropyRegion } from "@formatscope/core";
 
@@ -42,11 +42,11 @@ export function App() {
       const rowStart = row * bytesPerRow;
       while (
         regionIdx < regions.length &&
-        rowStart >= regions[regionIdx].offset + regions[regionIdx].length
+        rowStart >= regions[regionIdx]!.offset + regions[regionIdx]!.length
       ) {
         regionIdx += 1;
       }
-      lookup[row] = regionIdx < regions.length ? regions[regionIdx].entropy : 0;
+      lookup[row] = regionIdx < regions.length ? regions[regionIdx]!.entropy : 0;
     }
     return lookup;
   }, [bytes, regions, bytesPerRow, numRows]);
@@ -230,7 +230,7 @@ export function App() {
                           <span
                             key={j}
                             className={`cell tone-${entropyToTone(tone)}`}
-                            title={`0x${offset.toString(16).padStart(4, "0")}: 0x${bytes[offset].toString(16).padStart(2, "0")}`}
+                            title={`0x${offset.toString(16).padStart(4, "0")}: 0x${bytes[offset]!.toString(16).padStart(2, "0")}`}
                           />
                         );
                       })}
