@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { codegen, type CodegenResult } from "../src/codegen/index";
+import { codegen } from "../src/codegen/index";
 import { opaqueSchema } from "../src/index";
 
 describe("codegen", () => {
