@@ -44,7 +44,7 @@ describe("validateSchema", () => {
   });
 
   it("rejects unknown field kind", () => {
-    const schema: Schema = {
+    const schema = {
       version: 1,
       byteLength: 4,
       root: {
@@ -53,8 +53,8 @@ describe("validateSchema", () => {
         length: 4,
         confidence: 0,
         evidence: [],
-      } as unknown as Field;
-    };
+      },
+    } as unknown as Schema;
     expect(() => validateSchema(schema)).toThrow(/unsupported field kind/);
   });
 
