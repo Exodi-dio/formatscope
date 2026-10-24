@@ -137,7 +137,7 @@ function validateField(field: Field, start: number, end: number): void {
       }
       break;
 
-    case "struct":
+    case "struct": {
       // Validate child fields tile within the struct
       let childCursor = field.offset;
       for (const child of field.fields) {
@@ -151,5 +151,6 @@ function validateField(field: Field, start: number, end: number): void {
         throw new Error(`struct children do not tile the struct`);
       }
       break;
+    }
   }
 }
