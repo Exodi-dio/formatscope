@@ -7,7 +7,6 @@ export interface Hypothesis {
 }
 
 const MAGIC_PRIOR = 0.95;
-const STRING_PRIOR = 0.60;
 
 const KNOWN_MAGICS: readonly {
   readonly name: string;
