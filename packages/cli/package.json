@@ -1,0 +1,17 @@
+{
+  "name": "formatscope",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "formatscope": "./dist/index.js"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@formatscope/core": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
