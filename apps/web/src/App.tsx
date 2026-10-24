@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { scanEntropy, type EntropyRegion } from "@formatscope/core";
+import { type EntropyRegion } from "@formatscope/core";
 
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const ROW_HEIGHT = 24;
@@ -202,7 +202,6 @@ export function App() {
                 {Array.from({ length: endRow - startRow }, (_, i) => {
                   const row = startRow + i;
                   const rowStart = row * bytesPerRow;
-                  const rowEnd = Math.min(rowStart + bytesPerRow, bytes.byteLength);
                   const tone = rowEntropy[row] ?? 0;
                   return (
                     <div

@@ -1,4 +1,4 @@
-import { scanEntropy, type EntropyRegion } from "@formatscope/core";
+import { scanEntropy } from "@formatscope/core";
 
 const WINDOW_SIZE = 16;
 
