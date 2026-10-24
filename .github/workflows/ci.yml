@@ -41,10 +41,10 @@ jobs:
       - name: build
         run: npm run build
 
-      - name: upload lockfile
+      - name: upload build
         if: matrix.node == 20
         uses: actions/upload-artifact@v4
         with:
-          name: npm-lockfile
-          path: package-lock.json
+          name: web-build
+          path: apps/web/dist
           if-no-files-found: error
