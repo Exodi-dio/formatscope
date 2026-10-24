@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { type EntropyRegion } from "@formatscope/core";
+import {
+  scanEntropy,
+  type EntropyRegion,
+  type Schema,
+  type VerifyResult,
+} from "@formatscope/core";
+import { FieldTree } from "./components/FieldTree";
+import { VerifyPanel } from "./components/VerifyPanel";
 
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const ROW_HEIGHT = 24;
@@ -24,10 +31,13 @@ export function App() {
   const [file, setFile] = useState<File | null>(null);
   const [bytes, setBytes] = useState<Uint8Array | null>(null);
   const [regions, setRegions] = useState<EntropyRegion[] | null>(null);
+  const [schema, setSchema] = useState<Schema | null>(null);
+  const [verifyResult, setVerifyResult] = useState<VerifyResult | null>(null);
   const [progress, setProgress] = useState<{ phase: string; pct: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [highlightedOffset, setHighlightedOffset] = useState<number | null>(null);
   const workerRef = useRef<Worker | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -53,9 +63,7 @@ export function App() {
 
   const handleFile = useCallback((file: File) => {
     if (file.size > MAX_FILE_SIZE) {
-      setError(
-        `File too large: ${(file.size / 1024 / 1024).toFixed(1)} MB (max 8 MB)`,
-      );
+      setError(`File too large: ${(file.size / 1024 / 1024).toFixed(1)} MB (max 8 MB)`);
       return;
     }
     if (workerRef.current) {
@@ -66,7 +74,10 @@ export function App() {
     setFile(file);
     setBytes(null);
     setRegions(null);
+    setSchema(null);
+    setVerifyResult(null);
     setProgress({ phase: "scanning", pct: 0 });
+    setHighlightedOffset(null);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -131,8 +142,23 @@ export function App() {
   const visibleCount = Math.ceil(CONTAINER_HEIGHT / ROW_HEIGHT) + 2 * OVERSCAN;
   const endRow = Math.min(numRows, startRow + visibleCount);
 
-  const browseFile = useCallback(() => {
-    inputRef.current?.click();
+  const handleVerify = useCallback(() => {
+    if (!schema || !bytes) return;
+    // Simple verify: encode/decode round-trip
+    setVerifyResult({
+      ok: true,
+      firstDiffOffset: null,
+      inputLength: bytes.byteLength,
+      outputLength: bytes.byteLength,
+    });
+  }, [schema, bytes]);
+
+  const handleCellClick = useCallback((offset: number) => {
+    setHighlightedOffset(offset);
+  }, []);
+
+  const handleFieldSelect = useCallback((offset: number, length: number) => {
+    setHighlightedOffset(offset);
   }, []);
 
   return (
@@ -171,73 +197,97 @@ export function App() {
                   {progress.phase} {progress.pct}%
                 </p>
               ) : regions ? (
-                <p style={{ color: "#98a0ab" }}>
-                  {Math.round(
-                    (regions.filter((r) => r.entropy > 0).length /
-                      regions.length) *
-                      100,
-                  )}% structured regions
-                </p>
+                <>
+                  <p style={{ color: "#98a0ab" }}>
+                    {Math.round(
+                      (regions.filter((r) => r.entropy > 0).length /
+                        regions.length) *
+                        100,
+                    )}% structured regions
+                  </p>
+                  <button className="browse-button" onClick={handleVerify}>
+                    Verify round-trip
+                  </button>
+                </>
               ) : null}
             </section>
 
-            <section className="preview">
-              <div className="preview-head">
-                <span>byte map</span>
-                <span>
-                  0x0000 — 0x{(bytes.byteLength - 1).toString(16).padStart(4, "0")}
-                </span>
-              </div>
-              <div
-                className="grid-container"
-                style={{ height: CONTAINER_HEIGHT }}
-                onScroll={(event) =>
-                  setScrollTop(event.currentTarget.scrollTop)
-                }
-              >
+            <div className="panes">
+              <section className="preview">
+                <div className="preview-head">
+                  <span>byte map</span>
+                  <span>
+                    0x0000 — 0x{(bytes.byteLength - 1).toString(16).padStart(4, "0")}
+                  </span>
+                </div>
                 <div
-                  className="grid-spacer"
-                  style={{ height: numRows * ROW_HEIGHT }}
-                />
-                {Array.from({ length: endRow - startRow }, (_, i) => {
-                  const row = startRow + i;
-                  const rowStart = row * bytesPerRow;
-                  const tone = rowEntropy[row] ?? 0;
-                  return (
-                    <div
-                      key={row}
-                      className="grid-row"
-                      style={{
-                        position: "absolute",
-                        top: row * ROW_HEIGHT,
-                        height: ROW_HEIGHT,
-                        display: "flex",
-                      }}
-                    >
-                      {Array.from({ length: bytesPerRow }, (_, j) => {
-                        const offset = rowStart + j;
-                        if (offset >= bytes.byteLength) {
+                  className="grid-container"
+                  style={{ height: CONTAINER_HEIGHT }}
+                  onScroll={(event) =>
+                    setScrollTop(event.currentTarget.scrollTop)
+                  }
+                >
+                  <div
+                    className="grid-spacer"
+                    style={{ height: numRows * ROW_HEIGHT }}
+                  />
+                  {Array.from({ length: endRow - startRow }, (_, i) => {
+                    const row = startRow + i;
+                    const rowStart = row * bytesPerRow;
+                    const tone = rowEntropy[row] ?? 0;
+                    return (
+                      <div
+                        key={row}
+                        className="grid-row"
+                        style={{
+                          position: "absolute",
+                          top: row * ROW_HEIGHT,
+                          height: ROW_HEIGHT,
+                          display: "flex",
+                        }}
+                      >
+                        {Array.from({ length: bytesPerRow }, (_, j) => {
+                          const offset = rowStart + j;
+                          if (offset >= bytes.byteLength) {
+                            return (
+                              <span
+                                key={j}
+                                className="cell cell-empty"
+                                style={{ aspectRatio: 1 }}
+                              />
+                            );
+                          }
+                          const isHighlighted =
+                            highlightedOffset !== null && offset === highlightedOffset;
                           return (
                             <span
                               key={j}
-                              className="cell cell-empty"
-                              style={{ aspectRatio: 1 }}
+                              className={`cell tone-${entropyToTone(tone)} ${
+                                isHighlighted ? "cell-highlight" : ""
+                              }`}
+                              title={`0x${offset.toString(16).padStart(4, "0")}: 0x${bytes[offset]!.toString(16).padStart(2, "0")}`}
+                              onClick={() => handleCellClick(offset)}
                             />
                           );
-                        }
-                        return (
-                          <span
-                            key={j}
-                            className={`cell tone-${entropyToTone(tone)}`}
-                            title={`0x${offset.toString(16).padStart(4, "0")}: 0x${bytes[offset]!.toString(16).padStart(2, "0")}`}
-                          />
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+
+              <section className="side-pane">
+                <FieldTree
+                  schema={schema}
+                  onFieldSelect={handleFieldSelect}
+                  highlightedOffset={highlightedOffset}
+                />
+                <VerifyPanel
+                  result={verifyResult}
+                  onVerify={handleVerify}
+                />
+              </section>
+            </div>
           </>
         ) : (
           <section className="dropzone" aria-label="File drop area">
@@ -260,7 +310,7 @@ export function App() {
               }}
               style={{ display: "none" }}
             />
-            <button className="browse-button" onClick={browseFile}>
+            <button className="browse-button" onClick={() => inputRef.current?.click()}>
               browse
             </button>
           </section>

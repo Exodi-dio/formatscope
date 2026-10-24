@@ -274,6 +274,162 @@ h1 {
 .tone-5 { background: #262d38; }
 .tone-6 { background: #305044; }
 
+.cell-highlight {
+  outline: 2px solid #7dd3a7;
+  outline-offset: -2px;
+}
+
+.panes {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.side-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field-tree {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-raised);
+  display: flex;
+  flex-direction: column;
+}
+
+.field-tree-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field-tree-empty {
+  padding: 24px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.field-node {
+  display: flex;
+  align-items: center;
+  padding: 4px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.field-node:hover {
+  background: #151920;
+}
+
+.field-kind {
+  color: var(--accent);
+  margin-right: 8px;
+  min-width: 70px;
+}
+
+.field-range {
+  color: var(--muted);
+  margin-right: auto;
+}
+
+.field-expand {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.verify-panel {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-raised);
+  display: flex;
+  flex-direction: column;
+}
+
+.verify-panel-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.verify-result {
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.verify-result.verify-ok {
+  color: #7dd3a7;
+}
+
+.verify-result.verify-fail {
+  color: #ff6b6b;
+}
+
+.verify-diff {
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+.verify-diff.verify-diff-ok {
+  color: #7dd3a7;
+}
+
+.verify-offset {
+  color: var(--accent);
+}
+
+.verify-button {
+  margin: 12px 14px;
+  padding: 6px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--panel-raised);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.verify-button:hover {
+  border-color: var(--accent);
+}
+
+@media (max-width: 560px) {
+  .panes {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-container {
+    height: 300px;
+  }
+
+  .cell {
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
 footer {
   display: flex;
   justify-content: space-between;
