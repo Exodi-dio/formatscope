@@ -138,13 +138,15 @@ function validateField(field: Field, start: number, end: number): void {
       break;
 
     case "struct": {
-      // Validate child fields tile within the struct
+      // Validate child fields tile within the struct, contiguously
       let childCursor = field.offset;
       for (const child of field.fields) {
-        if (child.offset < childCursor) {
-          throw new Error(`struct child field overlaps or goes backwards`);
+        if (child.offset !== childCursor) {
+          throw new Error(
+            `struct child field does not tile at offset ${childCursor}`,
+          );
         }
-        validateField(child, childCursor, field.offset + field.length);
+        validateField(child, child.offset, child.offset + child.length);
         childCursor = child.offset + child.length;
       }
       if (childCursor !== field.offset + field.length) {
