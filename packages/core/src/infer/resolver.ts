@@ -32,14 +32,14 @@ export function resolve(
   for (const hyp of sorted) {
     if (hyp.offset + hyp.length > fileLength) continue;
 
-    let overlaps = false;
+    let hasOverlap = false;
     for (const sel of selected) {
       if (overlaps(hyp, sel)) {
-        overlaps = true;
+        hasOverlap = true;
         break;
       }
     }
-    if (overlaps) continue;
+    if (hasOverlap) continue;
 
     selected.push(hyp);
   }
