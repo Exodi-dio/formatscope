@@ -51,10 +51,10 @@ describe("scanStrings", () => {
   });
 
   it("handles string run at end of buffer", () => {
-    const bytes = new Uint8Array([0x00, 0x46, 0x4f, 0x4f]); // "Foo" at end
+    const bytes = new Uint8Array([0x00, 0x46, 0x4f, 0x4f, 0x44]); // "FooD" at end
     const hypotheses = scanStrings(bytes);
     expect(hypotheses).toHaveLength(1);
     expect(hypotheses[0]!.offset).toBe(1);
-    expect(hypotheses[0]!.length).toBe(3);
+    expect(hypotheses[0]!.length).toBe(4);
   });
 });
