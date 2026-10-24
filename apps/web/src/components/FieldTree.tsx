@@ -14,8 +14,8 @@ export function FieldTree({
   highlightedOffset,
 }: FieldTreeProps) {
   const handleFieldClick = useCallback(
-    (offset: number, length: number) => {
-      onFieldSelect(offset, length);
+    (offset: number) => {
+      onFieldSelect(offset);
     },
     [onFieldSelect],
   );
@@ -74,7 +74,7 @@ function FieldNode({
         borderLeft: isHighlighted ? "2px solid #7dd3a7" : "transparent",
         paddingLeft: isHighlighted ? 0 : 2,
       }}
-      onClick={() => onClick(field.offset, field.length)}
+      onClick={() => onClick(field.offset)}
       title={`0x${field.offset.toString(16).padStart(4, "0")}–0x${(field.offset + field.length - 1).toString(16).padStart(4, "0")}`}
     >
       <span className="field-kind">{field.kind}</span>

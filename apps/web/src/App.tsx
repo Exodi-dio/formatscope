@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
-  scanEntropy,
   type EntropyRegion,
   type Schema,
   type VerifyResult,
@@ -157,7 +156,7 @@ export function App() {
     setHighlightedOffset(offset);
   }, []);
 
-  const handleFieldSelect = useCallback((offset: number, length: number) => {
+  const handleFieldSelect = useCallback((offset: number) => {
     setHighlightedOffset(offset);
   }, []);
 
