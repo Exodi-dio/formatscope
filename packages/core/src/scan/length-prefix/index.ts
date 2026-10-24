@@ -36,4 +36,4 @@ export function scanLengthPrefix(bytes: Uint8Array): ScoredHypothesis[] {
   return hypotheses;
 }
 
-import type { ScoredHypothesis } from "../infer/resolver";
+import type { ScoredHypothesis } from "../../infer/resolver";

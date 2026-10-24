@@ -55,7 +55,7 @@ describe("scanChecksum", () => {
     const hypotheses = scanChecksum(new Uint8Array([0x01, 0x02, 0x03]));
     expect(hypotheses).toEqual([]);
   });
-}
+});
 
 function concatBytes(parts: readonly Uint8Array[]): Uint8Array {
   let total = 0;

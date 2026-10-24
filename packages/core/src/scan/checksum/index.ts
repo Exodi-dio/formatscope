@@ -50,4 +50,4 @@ function crc32(data: Uint8Array): number {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
-import type { ScoredHypothesis } from "../infer/resolver";
+import type { ScoredHypothesis } from "../../infer/resolver";
