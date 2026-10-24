@@ -8,4 +8,5 @@ export * from "./infer/index";
 export * from "./codegen/index";
 export * from "./schema/index";
 export * from "./interp/index";
+export * from "./diff/index";
 export * from "./verify/index";
