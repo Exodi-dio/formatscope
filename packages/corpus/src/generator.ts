@@ -3,11 +3,6 @@ export type FormatFile = {
   readonly bytes: Uint8Array;
 };
 
-export function generateFSBX(seed: number, version: 1 | 2): FormatFile;
-export function generateFSRT(seed: number, version: 1 | 2): FormatFile;
-export function generateFSTL(seed: number, version: 1 | 2): FormatFile;
-export function generateAll(seed: number): FormatFile[];
-
 export function generateFSBX(seed: number, version: 1 | 2): FormatFile {
   const rng = new PRNG(seed);
   const chunks = 4;

@@ -32,7 +32,7 @@ describe("corpus generator", () => {
 
     let anyDifferent = false;
     for (let i = 0; i < a.length; i += 1) {
-      if ([...a[i].bytes].some((b, j) => b !== b[i].bytes[j])) {
+      if ([...a[i].bytes].some((byte, j) => byte !== b[i].bytes[j])) {
         anyDifferent = true;
         break;
       }
