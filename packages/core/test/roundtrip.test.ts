@@ -54,7 +54,7 @@ describe("opaque schema", () => {
       validateSchema({
         version: 1,
         byteLength: 4,
-        root: { kind: "opaque", offset: 0, length: 3 },
+        root: { kind: "opaque", offset: 0, length: 3, confidence: 0, evidence: [] },
       }),
     ).toThrow(/tile/);
 
@@ -62,7 +62,7 @@ describe("opaque schema", () => {
       validateSchema({
         version: 1,
         byteLength: 4,
-        root: { kind: "opaque", offset: 1, length: 4 },
+        root: { kind: "opaque", offset: 1, length: 4, confidence: 0, evidence: [] },
       }),
     ).toThrow();
   });
@@ -71,7 +71,7 @@ describe("opaque schema", () => {
     const schema = {
       version: 2,
       byteLength: 0,
-      root: { kind: "opaque", offset: 0, length: 0 },
+      root: { kind: "opaque", offset: 0, length: 0, confidence: 0, evidence: [] },
     } as unknown as Schema;
 
     expect(() => validateSchema(schema)).toThrow(/version/);
