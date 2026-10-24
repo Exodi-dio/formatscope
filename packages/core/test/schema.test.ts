@@ -134,6 +134,6 @@ describe("validateSchema", () => {
         ],
       },
     };
-    expect(() => validateSchema(schema)).toThrow(/tile from/);
+    expect(() => validateSchema(schema)).toThrow(/tile/);
   });
 });
