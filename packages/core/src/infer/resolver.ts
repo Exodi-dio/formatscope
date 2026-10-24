@@ -12,6 +12,10 @@ export interface FormatModel {
   readonly coverage: number;
 }
 
+function overlaps(a: ScoredHypothesis, b: ScoredHypothesis): boolean {
+  return a.offset < b.offset + b.length && b.offset < a.offset + a.length;
+}
+
 export function resolve(
   hypotheses: readonly ScoredHypothesis[],
   fileLength: number,
@@ -22,19 +26,25 @@ export function resolve(
     return a.offset - b.offset;
   });
 
-  // Greedy interval scheduling: select non-overlapping hypotheses
+  // Greedy: select non-overlapping hypotheses in score order
   const selected: ScoredHypothesis[] = [];
-  let cursor = 0;
 
   for (const hyp of sorted) {
-    if (hyp.offset < cursor) continue; // overlaps with already selected
-    if (hyp.offset + hyp.length > fileLength) continue; // extends past file
+    if (hyp.offset + hyp.length > fileLength) continue;
+
+    let overlaps = false;
+    for (const sel of selected) {
+      if (overlaps(hyp, sel)) {
+        overlaps = true;
+        break;
+      }
+    }
+    if (overlaps) continue;
 
     selected.push(hyp);
-    cursor = hyp.offset + hyp.length;
   }
 
-  // Sort selected by offset for output
+  // Sort selected by offset for stable output
   selected.sort((a, b) => a.offset - b.offset);
 
   // Compute coverage (fraction of file covered by non-opaque hypotheses)
