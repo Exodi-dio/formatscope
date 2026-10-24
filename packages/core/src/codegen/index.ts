@@ -3,11 +3,6 @@ export interface NodeLineEntry {
   readonly line: number;
 }
 
-export interface CodegenResult {
-  readonly source: string;
-  readonly nodeMap: readonly NodeLineEntry[];
-}
-
 import type { Field, Schema } from "../schema/index";
 
 const lines: string[] = [];
@@ -43,7 +38,10 @@ function fieldSource(field: Field, path: string): string {
   }
 }
 
-export function codegen(schema: Schema): CodegenResult {
+export function codegen(schema: Schema): {
+  source: string;
+  nodeMap: readonly NodeLineEntry[];
+} {
   lines.length = 0;
   nodeMap.length = 0;
 
