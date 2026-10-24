@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { scanEntropy, type EntropyRegion } from "../src/scan/entropy/index";
+import { scanEntropy } from "../src/scan/entropy/index";
 
 describe("scanEntropy", () => {
   it("returns no regions for an empty buffer", () => {
