@@ -36,7 +36,13 @@ function shannonEntropy(window: Uint8Array): number {
   const counts = new Uint32Array(256);
 
   for (let index = 0; index < length; index += 1) {
-    counts[window[index]] += 1;
+    const symbol = window[index];
+
+    if (symbol === undefined) {
+      continue;
+    }
+
+    counts[symbol] += 1;
   }
 
   let entropy = 0;
@@ -44,7 +50,8 @@ function shannonEntropy(window: Uint8Array): number {
 
   for (let symbol = 0; symbol < 256; symbol += 1) {
     const count = counts[symbol];
-    if (count === 0) {
+
+    if (count === undefined || count === 0) {
       continue;
     }
 

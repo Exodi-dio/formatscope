@@ -22,9 +22,14 @@ describe("scanEntropy", () => {
       16,
     );
 
+    const first = regions[0];
+
     expect(regions).toHaveLength(1);
-    expect(regions[0].entropy).toBeGreaterThan(3.9);
-    expect(regions[0].entropy).toBeLessThanOrEqual(4);
+    expect(first).toBeDefined();
+    if (first) {
+      expect(first.entropy).toBeGreaterThan(3.9);
+      expect(first.entropy).toBeLessThanOrEqual(4);
+    }
   });
 
   it("tiles the buffer with full coverage", () => {
@@ -46,8 +51,11 @@ describe("scanEntropy", () => {
       4,
     );
 
-    expect(regions[0]).toEqual({ offset: 0, length: 4, entropy: 0 });
-    expect(regions[1]).toEqual({ offset: 4, length: 4, entropy: 0 });
+    const first = regions[0];
+    const second = regions[1];
+
+    expect(first).toEqual({ offset: 0, length: 4, entropy: 0 });
+    expect(second).toEqual({ offset: 4, length: 4, entropy: 0 });
   });
 
   it("clamps window size to the buffer length", () => {
