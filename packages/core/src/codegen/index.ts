@@ -39,7 +39,7 @@ function fieldSource(field: Field, path: string): string {
       return `{ kind: "struct", offset: ${field.offset}, length: ${field.length}, fields: [\n${children}\n  ] }`;
     }
     default:
-      throw new Error(`unsupported field kind: ${field.kind}`);
+      throw new Error("unsupported field kind");
   }
 }
 
