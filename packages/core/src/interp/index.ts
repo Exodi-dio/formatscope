@@ -4,6 +4,7 @@ import type {
   Schema,
   UintField,
   TlvField,
+  StructField,
 } from "../schema/index";
 
 export interface OpaqueValue {
@@ -91,7 +92,7 @@ function decodeField(field: Field, input: Uint8Array): Value {
     }
 
     default:
-      throw new Error(`unsupported field kind: ${String(field.kind)}`);
+      throw new Error(`unsupported field kind: ${String((field as { kind: string }).kind)}`);
   }
 }
 
@@ -100,8 +101,10 @@ function encodeField(field: Field, value: Value): Uint8Array {
     case "opaque":
       return value.bytes.slice();
 
-    case "uint":
-      return encodeUintValue(value, field.length, field.order);
+    case "uint": {
+      const uintField = field as UintField;
+      return encodeUintValue(value, uintField.length, uintField.order);
+    }
 
     case "ascii":
       return encodeAsciiValue(value);
@@ -110,13 +113,14 @@ function encodeField(field: Field, value: Value): Uint8Array {
       return encodeTlvValue(value);
 
     case "struct": {
+      const structField = field as StructField;
       return concatBytes(
-        field.fields.map((child, i) => encodeField(child, value.children[i])),
+        structField.fields.map((child, i) => encodeField(child, value.children[i])),
       );
     }
 
     default:
-      throw new Error(`unsupported field kind: ${String(value.kind)}`);
+      throw new Error(`unsupported field kind: ${String((value as { kind: string }).kind)}`);
   }
 }
 
@@ -154,11 +158,11 @@ function encodeUintValue(
   const num = value.value as number;
   if (isLE) {
     for (let i = 0; i < length; i += 1) {
-      bytes[i] = (num >>> (BigInt(i) * 8n)) & 0xff;
+      bytes[i] = (num >>> (i * 8)) & 0xff;
     }
   } else {
     for (let i = 0; i < length; i += 1) {
-      bytes[i] = (num >>> (BigInt(length - 1 - i) * 8n)) & 0xff;
+      bytes[i] = (num >>> ((length - 1 - i) * 8)) & 0xff;
     }
   }
   return bytes;
@@ -187,8 +191,14 @@ function decodeTlvField(field: TlvField, input: Uint8Array): TlvValue {
   return { kind: "tlv", tag, value: valueBytes.slice() };
 }
 
-function encodeTlvValue(value: TlvValue): Uint8Array {
-  return concatBytes([new Uint8Array([value.tag]), value.value]);
+function encodeTlvValue(value: TlvValue, field: TlvField): Uint8Array {
+  // Tag (1 byte) + length (1 byte) + value
+  const lengthField = Math.min(value.value.byteLength, 255);
+  return concatBytes([
+    new Uint8Array([value.tag]),
+    new Uint8Array([lengthField]),
+    value.value.subarray(0, lengthField),
+  ]);
 }
 
 // --- Integer read helpers ---
