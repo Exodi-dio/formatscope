@@ -156,7 +156,7 @@ function concatBytes(parts: readonly Uint8Array[]): Uint8Array {
 function crc32(data: Uint8Array): number {
   let crc = 0xffffffff;
   for (let i = 0; i < data.byteLength; i += 1) {
-    crc ^= data[i];
+    crc ^= data[i]!;
     for (let j = 0; j < 8; j += 1) {
       if (crc & 1) {
         crc = (crc >>> 1) ^ 0xedb88320;

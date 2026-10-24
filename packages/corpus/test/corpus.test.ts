@@ -22,7 +22,7 @@ describe("corpus generator", () => {
     const b = generateAll(0xdeadbeef);
 
     for (let i = 0; i < a.length; i += 1) {
-      expect([...a[i].bytes]).toEqual([...b[i].bytes]);
+      expect([...a[i]!.bytes]).toEqual([...b[i]!.bytes]);
     }
   });
 
@@ -32,7 +32,7 @@ describe("corpus generator", () => {
 
     let anyDifferent = false;
     for (let i = 0; i < a.length; i += 1) {
-      if ([...a[i].bytes].some((byte, j) => byte !== b[i].bytes[j])) {
+      if ([...a[i]!.bytes].some((byte, j) => byte !== b[i]!.bytes[j])) {
         anyDifferent = true;
         break;
       }
