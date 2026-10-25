@@ -57,12 +57,15 @@ describe("scanMagic", () => {
   });
 
   it("detects multiple magics if they share a prefix", () => {
-    // "PK" is a prefix of nothing in our list, but test that
-    // a buffer starting with "PK" gets the PK hypothesis
+    // "PK" (0x50, 0x4b) is a prefix of ZIP (0x50, 0x4b, 0x03, 0x04)
     const bytes = new Uint8Array([0x50, 0x4b, 0x03, 0x04]);
     const hypotheses = scanMagic(bytes);
 
-    expect(hypotheses).toHaveLength(1);
-    expect(hypotheses[0]!.evidence).toEqual(["magic \"PK\" at offset 0"]);
+    expect(hypotheses).toHaveLength(2);
+    const evs = hypotheses.map((h) => h.evidence.join(", ")).sort();
+    expect(evs).toEqual([
+      'magic "PK" at offset 0',
+      'magic "ZIP" at offset 0',
+    ]);
   });
 });

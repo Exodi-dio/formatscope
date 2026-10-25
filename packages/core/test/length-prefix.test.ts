@@ -14,13 +14,20 @@ function u32LE(value: number): Uint8Array {
 describe("scanLengthPrefix", () => {
   it("detects valid length prefix", () => {
     // offset 0: u32 LE = 8, meaning 8 bytes of payload follow at offset 4
+    // u16 LE at offset 0 = 8, also matches
     const bytes = concatBytes([u32LE(8), new Uint8Array(8)]);
     const hypotheses = scanLengthPrefix(bytes);
 
-    expect(hypotheses).toHaveLength(1);
-    expect(hypotheses[0]!.offset).toBe(0);
-    expect(hypotheses[0]!.length).toBe(12); // 4 (header) + 8 (payload)
-    expect(hypotheses[0]!.confidence).toBeGreaterThan(0);
+    expect(hypotheses).toHaveLength(2);
+    // u32: offset 0, length 12 (4 header + 8 payload)
+    // u16: offset 0, length 10 (2 header + 8 payload)
+    const byLength = [...hypotheses].sort((a, b) => a.length - b.length);
+    expect(byLength[0].offset).toBe(0);
+    expect(byLength[0].length).toBe(10);
+    expect(byLength[1].offset).toBe(0);
+    expect(byLength[1].length).toBe(12);
+    expect(byLength[0].confidence).toBeGreaterThan(0);
+    expect(byLength[1].confidence).toBeGreaterThan(0);
   });
 
   it("rejects length that points past file end", () => {
@@ -30,9 +37,13 @@ describe("scanLengthPrefix", () => {
   });
 
   it("rejects non-4-byte-aligned length", () => {
+    // u32 LE = 5 (not 4-byte aligned), u16 LE = 5 (length 7, fits in 10 bytes)
+    // u16 also matches here since 7 <= 10, so we get 1 hypothesis
     const bytes = concatBytes([u32LE(5), new Uint8Array(5)]);
     const hypotheses = scanLengthPrefix(bytes);
-    expect(hypotheses).toEqual([]);
+    expect(hypotheses).toHaveLength(1);
+    expect(hypotheses[0]!.offset).toBe(0);
+    expect(hypotheses[0]!.length).toBe(7); // 2 header + 5 payload
   });
 
   it("returns no hypotheses for empty buffer", () => {
