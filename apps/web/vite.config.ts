@@ -8,7 +8,7 @@ const coreEntry = fileURLToPath(
 );
 
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS === "true" ? "/" : "/",
+  base: "/",
   plugins: [react()],
   resolve: {
     alias: {
