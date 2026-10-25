@@ -16,42 +16,10 @@
     <style>
       body { margin: 0; background: #0b0c0e; color: #eceef1; font-family: system-ui, sans-serif; }
       #root { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-      #mount-error { text-align: center; padding: 2rem; }
-      #mount-error h2 { color: #ff6b6b; margin-bottom: 1rem; }
-      #mount-error p { color: #98a0ab; max-width: 500px; margin: 0 auto; }
-      #mount-error button { padding: 0.8rem 1.5rem; background: #7dd3a7; color: #0b0c0e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
     </style>
   </head>
   <body>
-    <div id="root">
-      <div id="mount-error">
-        <h2>FormatScope failed to load</h2>
-        <p id="mount-error-msg">JavaScript error during app initialization</p>
-        <button onclick="window.location.reload()">Refresh</button>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" crossorigin src="/src/main.tsx"></script>
-    <script>
-      // Test: if React doesn't mount, show this message
-      setTimeout(function() {
-        var root = document.getElementById('root');
-        var msg = document.getElementById('mount-error-msg');
-        if (root && root.children.length === 1 && root.children[0].id === 'mount-error') {
-          el = document.getElementById('mount-error-msg');
-          if (el) el.textContent = 'React did not mount. Check console for errors.';
-          document.getElementById('mount-error').style.display = 'block';
-        }
-      }, 2000);
-      window.addEventListener('error', function(e) {
-        var el = document.getElementById('mount-error-msg');
-        if (el) el.textContent = 'JS Error: ' + (e.message || 'unknown');
-        document.getElementById('mount-error').style.display = 'block';
-      });
-      window.addEventListener('unhandledrejection', function(e) {
-        var el = document.getElementById('mount-error-msg');
-        if (el) el.textContent = 'Unhandled rejection: ' + (e.reason || 'unknown');
-        document.getElementById('mount-error').style.display = 'block';
-      });
-    </script>
   </body>
 </html>
