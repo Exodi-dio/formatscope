@@ -16,6 +16,7 @@ const KNOWN_MAGICS: readonly {
   { name: "FSRT", bytes: new Uint8Array([0x46, 0x53, 0x52, 0x54]) },
   { name: "FSTL", bytes: new Uint8Array([0x46, 0x53, 0x54, 0x4c]) },
   { name: "MZ", bytes: new Uint8Array([0x4d, 0x5a]) },
+  { name: "PK", bytes: new Uint8Array([0x50, 0x4b]) },
   { name: "PE", bytes: new Uint8Array([0x50, 0x45, 0x00, 0x00]) },
   { name: "ELF", bytes: new Uint8Array([0x7f, 0x45, 0x4c, 0x46]) },
   { name: "ZIP", bytes: new Uint8Array([0x50, 0x4b, 0x03, 0x04]) },
