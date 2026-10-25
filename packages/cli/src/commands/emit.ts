@@ -25,7 +25,7 @@ export async function emit(args: string[]): Promise<number> {
     return 2;
   }
 
-  const result = codegen(schema as Schema);
+  const result = codegen(schema as unknown as Schema);
 
   if (outputPath) {
     import("node:fs/promises").then(({ writeFile }) => {
