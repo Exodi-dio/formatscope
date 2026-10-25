@@ -47,13 +47,13 @@ export function App() {
     if (!bytes || !regions) return new Float32Array(0);
     const lookup = new Float32Array(numRows);
     let regionIdx = 0;
-    for (let row = 0; row < numRows; row += 1) {
+    for (let row = 0; row < numRows; row++) {
       const rowStart = row * bytesPerRow;
       while (
         regionIdx < regions.length &&
         rowStart >= regions[regionIdx]!.offset + regions[regionIdx]!.length
       ) {
-        regionIdx += 1;
+        regionIdx++;
       }
       lookup[row] = regionIdx < regions.length ? regions[regionIdx]!.entropy : 0;
     }
@@ -143,7 +143,6 @@ export function App() {
 
   const handleVerify = useCallback(() => {
     if (!schema || !bytes) return;
-    // Simple verify: encode/decode round-trip
     setVerifyResult({
       ok: true,
       firstDiffOffset: null,

@@ -7,27 +7,44 @@ export interface ChecksumCandidate {
 export function scanChecksum(bytes: Uint8Array): ScoredHypothesis[] {
   const hypotheses: ScoredHypothesis[] = [];
 
-  // Check for CRC32 at the end of the file
-  // Scan for regions where the last 4 bytes are a CRC32 of the preceding bytes
-  for (let regionEnd = 4; regionEnd <= bytes.byteLength; regionEnd += 1) {
+  // CRC32 at end of file
+  for (let regionEnd = 4; regionEnd <= bytes.byteLength; regionEnd++) {
     const checksumOffset = regionEnd - 4;
     const storedCRC =
-      bytes[checksumOffset]! |
-      (bytes[checksumOffset + 1]! << 8) |
-      (bytes[checksumOffset + 2]! << 16) |
-      (bytes[checksumOffset + 3]! << 24);
+      bytes[checksumOffset] |
+      (bytes[checksumOffset + 1] << 8) |
+      (bytes[checksumOffset + 2] << 16) |
+      (bytes[checksumOffset + 3] << 24);
 
     const computedCRC = crc32(bytes.subarray(0, checksumOffset));
 
     if (storedCRC === computedCRC && checksumOffset > 0) {
-      const confidence = 0.98; // D18: verified checksum promotes to 0.98
-      const score = confidence * regionEnd;
-
       hypotheses.push({
         offset: 0,
         length: regionEnd,
-        confidence,
-        score,
+        confidence: 0.98,
+        score: 0.98 * regionEnd,
+      });
+    }
+  }
+
+  // Adler32 at end of file
+  for (let regionEnd = 4; regionEnd <= bytes.byteLength; regionEnd++) {
+    const checksumOffset = regionEnd - 4;
+    const storedAdler =
+      bytes[checksumOffset] |
+      (bytes[checksumOffset + 1] << 8) |
+      (bytes[checksumOffset + 2] << 16) |
+      (bytes[checksumOffset + 3] << 24);
+
+    const computedAdler = adler32(bytes.subarray(0, checksumOffset));
+
+    if (storedAdler === computedAdler && checksumOffset > 0) {
+      hypotheses.push({
+        offset: 0,
+        length: regionEnd,
+        confidence: 0.97,
+        score: 0.97 * regionEnd,
       });
     }
   }
@@ -37,9 +54,9 @@ export function scanChecksum(bytes: Uint8Array): ScoredHypothesis[] {
 
 function crc32(data: Uint8Array): number {
   let crc = 0xffffffff;
-  for (let i = 0; i < data.byteLength; i += 1) {
-    crc ^= data[i]!;
-    for (let j = 0; j < 8; j += 1) {
+  for (let i = 0; i < data.byteLength; i++) {
+    crc ^= data[i];
+    for (let j = 0; j < 8; j++) {
       if (crc & 1) {
         crc = (crc >>> 1) ^ 0xedb88320;
       } else {
@@ -48,6 +65,19 @@ function crc32(data: Uint8Array): number {
     }
   }
   return (crc ^ 0xffffffff) >>> 0;
+}
+
+function adler32(data: Uint8Array): number {
+  let a = 1;
+  let b = 0;
+  const MOD = 65521;
+
+  for (let i = 0; i < data.byteLength; i++) {
+    a = (a + data[i]) % MOD;
+    b = (b + a) % MOD;
+  }
+
+  return (b << 16) | a;
 }
 
 import type { ScoredHypothesis } from "../../infer/resolver";

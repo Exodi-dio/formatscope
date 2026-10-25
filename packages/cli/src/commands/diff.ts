@@ -62,5 +62,5 @@ export async function diff(args: string[]): Promise<number> {
     console.log(`  ${change.kind.padEnd(8)} ${change.path}: ${oldVal} → ${newVal}`);
   }
 
-  return result.summary.changed > 0 || result.summary.added > 0 || result.summary.removed > 0 ? 0 : 0;
+  return 0;
 }

@@ -27,36 +27,27 @@ export function scanEntropy(
   return regions;
 }
 
+// shannon entropy over a byte window
 function shannonEntropy(window: Uint8Array): number {
   const length = window.byteLength;
-  if (length === 0) {
-    return 0;
-  }
+  if (length === 0) return 0;
 
   const counts = new Uint32Array(256);
 
-  for (let index = 0; index < length; index += 1) {
-    const symbol = window[index];
-
-    if (symbol === undefined) {
-      continue;
-    }
-
-    const current = counts[symbol] ?? 0;
-    counts[symbol] = current + 1;
+  for (let i = 0; i < length; i++) {
+    const sym = window[i];
+    if (sym === undefined) continue;
+    const cur = counts[sym] ?? 0;
+    counts[sym] = cur + 1;
   }
 
   let entropy = 0;
-  const invLength = 1 / length;
+  const invLen = 1 / length;
 
-  for (let symbol = 0; symbol < 256; symbol += 1) {
-    const count = counts[symbol];
-
-    if (count === undefined || count === 0) {
-      continue;
-    }
-
-    const p = count * invLength;
+  for (let s = 0; s < 256; s++) {
+    const c = counts[s];
+    if (c === undefined || c === 0) continue;
+    const p = c * invLen;
     entropy -= p * Math.log2(p);
   }
 

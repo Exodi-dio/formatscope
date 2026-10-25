@@ -20,13 +20,11 @@ export function resolve(
   hypotheses: readonly ScoredHypothesis[],
   fileLength: number,
 ): FormatModel {
-  // Sort by score descending, then offset ascending (tie-break from D18)
   const sorted = [...hypotheses].sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
     return a.offset - b.offset;
   });
 
-  // Greedy: select non-overlapping hypotheses in score order
   const selected: ScoredHypothesis[] = [];
 
   for (const hyp of sorted) {
@@ -44,10 +42,8 @@ export function resolve(
     selected.push(hyp);
   }
 
-  // Sort selected by offset for stable output
   selected.sort((a, b) => a.offset - b.offset);
 
-  // Compute coverage (fraction of file covered by non-opaque hypotheses)
   let covered = 0;
   for (const hyp of selected) covered += hyp.length;
   const coverage = fileLength > 0 ? covered / fileLength : 0;

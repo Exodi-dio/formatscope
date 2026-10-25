@@ -62,19 +62,13 @@ export class ByteReader {
 
 export function concatBytes(parts: readonly Uint8Array[]): Uint8Array {
   let total = 0;
-
-  for (const part of parts) {
-    total += part.byteLength;
-  }
-
+  for (const part of parts) total += part.byteLength;
   const output = new Uint8Array(total);
   let offset = 0;
-
   for (const part of parts) {
     output.set(part, offset);
     offset += part.byteLength;
   }
-
   return output;
 }
 
@@ -83,12 +77,8 @@ export function firstDifference(
   right: Uint8Array,
 ): number | null {
   const shared = Math.min(left.byteLength, right.byteLength);
-
-  for (let index = 0; index < shared; index += 1) {
-    if (left[index] !== right[index]) {
-      return index;
-    }
+  for (let i = 0; i < shared; i++) {
+    if (left[i] !== right[i]) return i;
   }
-
   return left.byteLength === right.byteLength ? null : shared;
 }

@@ -4,7 +4,7 @@ import type { Field, Schema } from "@formatscope/core";
 
 interface FieldTreeProps {
   schema: Schema | null;
-  onFieldSelect: (offset: number, length: number) => void;
+  onFieldSelect: (offset: number) => void;
   highlightedOffset: number | null;
 }
 
@@ -47,7 +47,7 @@ interface FieldNodeProps {
   field: Field;
   path: string;
   depth: number;
-  onClick: (offset: number, length: number) => void;
+  onClick: (offset: number) => void;
   highlightedOffset: number | null;
 }
 

@@ -45,14 +45,12 @@ export function codegen(schema: Schema): {
   lines.length = 0;
   nodeMap.length = 0;
 
-  // Header
   emit("// FormatScope generated parser");
   emit(`// Schema version: ${schema.version}, source length: ${schema.byteLength}`);
   emit("");
   emit("import { ByteReader } from \"../bytes\";");
   emit("");
 
-  // Types
   emit("export interface Document {");
   emit("  root: RootValue;");
   emit("}");
@@ -63,7 +61,6 @@ export function codegen(schema: Schema): {
   emit("}");
   emit("");
 
-  // Parse
   emit("export function parse(input: Uint8Array): Document {");
   emit("  const reader = new ByteReader(input);");
   emit("  const root = parseField(schema.root, reader);");
@@ -71,7 +68,6 @@ export function codegen(schema: Schema): {
   emit("}");
   emit("");
 
-  // Schema root node map tracking
   emit("const schemaRoot = buildSchemaRoot();");
   emit("");
   emit("function buildSchemaRoot(): any {");
@@ -81,7 +77,6 @@ export function codegen(schema: Schema): {
   emit("}");
   emit("");
 
-  // Parse field dispatcher
   emit("function parseField(field: any, reader: ByteReader): any {");
   emit("  switch (field.kind) {");
   emit("    case \"opaque\":");
@@ -100,7 +95,6 @@ export function codegen(schema: Schema): {
   emit("}");
   emit("");
 
-  // Serialize
   emit("export function serialize(doc: Document): Uint8Array {");
   emit("  const chunks: Uint8Array[] = [];");
   emit("  serializeField(doc.root, chunks);");
@@ -130,7 +124,6 @@ export function codegen(schema: Schema): {
   emit("}");
   emit("");
 
-  // Helpers
   emit("function concatBytes(parts: Uint8Array[]): Uint8Array {");
   emit("  let total = 0;");
   emit("  for (const part of parts) total += part.length;");
@@ -143,7 +136,7 @@ export function codegen(schema: Schema): {
   emit("function encodeUInt(value: number | bigint, len: number): Uint8Array {");
   emit("  const bytes = new Uint8Array(len);");
   emit("  const n = typeof value === \"bigint\" ? Number(value) : value;");
-  emit("  for (let i = 0; i < len; i += 1) {");
+  emit("  for (let i = 0; i < len; i++) {");
   emit("    bytes[len - 1 - i] = (n >>> (i * 8)) & 0xff;");
   emit("  }");
   emit("  return bytes;");

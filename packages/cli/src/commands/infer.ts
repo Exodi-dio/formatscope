@@ -1,5 +1,14 @@
 import { readFile } from "node:fs/promises";
-import { scanEntropy, type Schema } from "@formatscope/core";
+import {
+  scanMagic,
+  scanStrings,
+  scanPeriodicity,
+  scanLengthPrefix,
+  scanChecksum,
+  resolve,
+  opaqueSchema,
+  type Schema,
+} from "@formatscope/core";
 
 export async function infer(args: string[]): Promise<number> {
   if (args.length !== 1) {
@@ -17,17 +26,34 @@ export async function infer(args: string[]): Promise<number> {
     return 2;
   }
 
-  const regions = scanEntropy(bytes, 16);
+  const magic = scanMagic(bytes);
+  const strings = scanStrings(bytes);
+  const periodicity = scanPeriodicity(bytes);
+  const lengthPrefix = scanLengthPrefix(bytes);
+  const checksum = scanChecksum(bytes);
+
+  const allHypotheses = [
+    ...magic.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...strings.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...periodicity.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...lengthPrefix,
+    ...checksum,
+  ];
+
+  const model = resolve(allHypotheses, bytes.byteLength);
 
   console.log(`File: ${filePath}`);
   console.log(`Size: ${bytes.byteLength} bytes`);
-  console.log(`Regions: ${regions.length}`);
+  console.log(`Coverage: ${Math.round(model.coverage * 100)}%`);
+  console.log(`Hypotheses: ${model.hypotheses.length}`);
   console.log("");
 
-  for (const region of regions) {
+  for (const h of model.hypotheses) {
     console.log(
-      `  0x${region.offset.toString(16).padStart(4, "0")} ` +
-      `len=${region.length} ent=${region.entropy.toFixed(2)}`,
+      `  0x${h.offset.toString(16).padStart(4, "0")} ` +
+      `len=${h.length.toString().padStart(4)} ` +
+      `conf=${h.confidence.toFixed(2)} ` +
+      `score=${h.score.toFixed(1)}`,
     );
   }
 

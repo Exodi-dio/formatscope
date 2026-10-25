@@ -17,11 +17,9 @@ export function scanStrings(bytes: Uint8Array): Hypothesis[] {
   const hypotheses: Hypothesis[] = [];
   let start = -1;
 
-  for (let i = 0; i < bytes.byteLength; i += 1) {
-    if (isPrintable(bytes[i]!)) {
-      if (start === -1) {
-        start = i;
-      }
+  for (let i = 0; i < bytes.byteLength; i++) {
+    if (isPrintable(bytes[i])) {
+      if (start === -1) start = i;
     } else if (start !== -1) {
       const length = i - start;
       if (length >= MIN_STRING_LENGTH) {
@@ -37,7 +35,6 @@ export function scanStrings(bytes: Uint8Array): Hypothesis[] {
     }
   }
 
-  // Handle a string run that reaches the end of the buffer
   if (start !== -1 && bytes.byteLength - start >= MIN_STRING_LENGTH) {
     hypotheses.push({
       kind: "string",

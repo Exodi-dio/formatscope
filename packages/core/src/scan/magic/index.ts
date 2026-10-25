@@ -27,8 +27,8 @@ export function scanMagic(bytes: Uint8Array): Hypothesis[] {
     if (bytes.byteLength < magic.bytes.byteLength) continue;
 
     let match = true;
-    for (let i = 0; i < magic.bytes.byteLength; i += 1) {
-      if (bytes[i]! !== magic.bytes[i]) {
+    for (let i = 0; i < magic.bytes.byteLength; i++) {
+      if (bytes[i] !== magic.bytes[i]) {
         match = false;
         break;
       }

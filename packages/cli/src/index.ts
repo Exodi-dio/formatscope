@@ -5,6 +5,9 @@ import { infer } from "./commands/infer.js";
 import { emit } from "./commands/emit.js";
 import { verify } from "./commands/verify.js";
 import { diff } from "./commands/diff.js";
+import { scan } from "./commands/scan.js";
+import { strings } from "./commands/strings.js";
+import { magic } from "./commands/magic.js";
 
 const commands: Record<string, (args: string[]) => Promise<number>> = {
   inspect,
@@ -12,6 +15,9 @@ const commands: Record<string, (args: string[]) => Promise<number>> = {
   emit,
   verify,
   diff,
+  scan,
+  strings,
+  magic,
 };
 
 const [command, ...args] = process.argv.slice(2);
@@ -21,10 +27,13 @@ if (!command || command === "--help" || command === "-h") {
   console.log("");
   console.log("Commands:");
   console.log("  inspect <file>    Show file info and entropy map");
-  console.log("  infer <file>      Infer structure and show schema");
-  console.log("  emit <schema>     Generate a TypeScript parser from schema");
+  console.log("  infer  <file>     Infer structure and show schema");
+  console.log("  emit   <schema>   Generate a TypeScript parser from schema");
   console.log("  verify <file>     Verify byte-for-byte round-trip");
-  console.log("  diff <file1> <file2>  Semantic diff between two files");
+  console.log("  diff   <f1> <f2>  Semantic diff between two files");
+  console.log("  scan   <file>     Show all inference rules that matched");
+  console.log("  strings <file>    List printable string runs");
+  console.log("  magic  <file>     List detected magic headers");
   process.exit(0);
 }
 

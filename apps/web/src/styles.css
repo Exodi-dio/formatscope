@@ -445,7 +445,7 @@ h1 {
     height: 20px;
   }
 
-  .footer {
+  footer {
     flex-direction: column;
     gap: 6px;
   }
@@ -461,22 +461,6 @@ footer {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.04em;
-}
-
-@media (max-width: 560px) {
-  .grid-container {
-    height: 300px;
-  }
-
-  .cell {
-    width: 20px;
-    height: 20px;
-  }
-
-  .footer {
-    flex-direction: column;
-    gap: 6px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

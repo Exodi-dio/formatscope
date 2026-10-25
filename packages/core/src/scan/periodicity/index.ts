@@ -16,15 +16,13 @@ export function scanPeriodicity(bytes: Uint8Array): Hypothesis[] {
   const hypotheses: Hypothesis[] = [];
   const maxStride = Math.min(MAX_STRIDE, Math.floor(bytes.byteLength / 2));
 
-  for (let stride = 1; stride <= maxStride; stride += 1) {
+  for (let stride = 1; stride <= maxStride; stride++) {
     let matches = 0;
     let total = 0;
 
-    for (let i = 0; i < bytes.byteLength - stride; i += 1) {
-      total += 1;
-      if (bytes[i]! === bytes[i + stride]!) {
-        matches += 1;
-      }
+    for (let i = 0; i < bytes.byteLength - stride; i++) {
+      total++;
+      if (bytes[i] === bytes[i + stride]) matches++;
     }
 
     if (total === 0) continue;
