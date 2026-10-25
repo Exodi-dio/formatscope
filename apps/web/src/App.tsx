@@ -1,8 +1,4 @@
-import { useState } from "react";
-
 export function App() {
-  const [loaded, setLoaded] = useState(false);
-
   return (
     <div
       style={{
@@ -20,10 +16,14 @@ export function App() {
         FormatScope
       </h1>
       <p style={{ color: "#98a0ab", marginBottom: "1.5rem" }}>
-        Binary format workbench — loading…
+        React is loading…
       </p>
       <button
-        onClick={() => setLoaded(true)}
+        onClick={() => {
+          const btn = document.getElementById("test-btn");
+          if (btn) btn.textContent = "React works!";
+        }}
+        id="test-btn"
         style={{
           padding: "0.8rem 1.5rem",
           background: "#7dd3a7",
@@ -35,14 +35,11 @@ export function App() {
           fontSize: "1rem",
         }}
       >
-        {loaded ? "Loaded!" : "Click to load app"}
+        Click me
       </button>
-      {loaded && (
-        <div style={{ marginTop: "2rem", color: "#eceef1" }}>
-          <p>React is working!</p>
-          <p>Drop zone would go here.</p>
-        </div>
-      )}
+      <div style={{ marginTop: "2rem", color: "#eceef1" }}>
+        <p id="status">Waiting for React...</p>
+      </div>
     </div>
   );
 }
