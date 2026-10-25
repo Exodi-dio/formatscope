@@ -1,4 +1,4 @@
-import * as fs from "node:fs";
+import { readFileSync } from "node:fs";
 import { scanEntropy } from "@formatscope/core";
 
 export async function inspect(args: string[]): Promise<number> {
@@ -11,7 +11,7 @@ export async function inspect(args: string[]): Promise<number> {
   let bytes: Uint8Array;
 
   try {
-    bytes = fs.readFileSync(filePath) as unknown as Uint8Array;
+    bytes = readFileSync(filePath) as unknown as Uint8Array;
   } catch (err) {
     console.error(`Cannot read file: ${err instanceof Error ? err.message : String(err)}`);
     return 2;
