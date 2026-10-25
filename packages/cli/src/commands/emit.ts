@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import * as fs from "node:fs";
 import { codegen } from "@formatscope/core";
 
 export async function emit(args: string[]): Promise<number> {
@@ -11,7 +11,7 @@ export async function emit(args: string[]): Promise<number> {
 
   let schemaText: string;
   try {
-    schemaText = await readFile(schemaPath, "utf8");
+    schemaText = fs.readFileSync(schemaPath, "utf8");
   } catch (err) {
     console.error(`Cannot read schema: ${err instanceof Error ? err.message : String(err)}`);
     return 2;

@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import * as fs from "node:fs";
 import { scanUUID } from "@formatscope/core";
 
 export async function uuid(args: string[]): Promise<number> {
@@ -11,7 +11,7 @@ export async function uuid(args: string[]): Promise<number> {
   let bytes: Uint8Array;
 
   try {
-    bytes = Buffer.from(await readFile(filePath));
+    bytes = fs.readFileSync(filePath);
   } catch (err) {
     console.error(`Cannot read file: ${err instanceof Error ? err.message : String(err)}`);
     return 2;
