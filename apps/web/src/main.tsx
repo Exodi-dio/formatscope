@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 
 import { App } from "./App";
 import "./styles.css";
@@ -10,7 +10,7 @@ if (!container) {
 }
 
 try {
-  ReactDOM.render(<App />, container);
+  ReactDOM.createRoot(container).render(<App />);
 } catch (e: unknown) {
   const message = e instanceof Error ? e.message : String(e);
   container.innerHTML = `
