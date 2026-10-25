@@ -9,6 +9,8 @@ import {
   scanUUID,
   scanTimestamps,
   scanIPs,
+  scanPE,
+  scanELF,
 } from "@formatscope/core";
 
 export async function scan(args: string[]): Promise<number> {
@@ -36,6 +38,8 @@ export async function scan(args: string[]): Promise<number> {
   const uuids = scanUUID(bytes);
   const timestamps = scanTimestamps(bytes);
   const ips = scanIPs(bytes);
+  const pe = scanPE(bytes);
+  const elf = scanELF(bytes);
 
   console.log(`File: ${filePath}`);
   console.log(`Size: ${bytes.byteLength} bytes`);
@@ -109,6 +113,22 @@ export async function scan(args: string[]): Promise<number> {
     console.log("IP addresses:");
     for (const ip of ips) {
       console.log(`  ${ip.evidence.join(", ")} conf=${ip.confidence.toFixed(2)}`);
+    }
+    console.log("");
+  }
+
+  if (pe.length > 0) {
+    console.log("PE headers:");
+    for (const p of pe) {
+      console.log(`  ${p.evidence.join(", ")} conf=${p.confidence.toFixed(2)}`);
+    }
+    console.log("");
+  }
+
+  if (elf.length > 0) {
+    console.log("ELF headers:");
+    for (const e of elf) {
+      console.log(`  ${e.evidence.join(", ")} conf=${e.confidence.toFixed(2)}`);
     }
   }
 

@@ -9,6 +9,8 @@ import {
   scanUUID,
   scanTimestamps,
   scanIPs,
+  scanPE,
+  scanELF,
   resolve,
   opaqueSchema,
   type Schema,
@@ -39,6 +41,8 @@ export async function infer(args: string[]): Promise<number> {
   const uuids = scanUUID(bytes);
   const timestamps = scanTimestamps(bytes);
   const ips = scanIPs(bytes);
+  const pe = scanPE(bytes);
+  const elf = scanELF(bytes);
 
   const allHypotheses = [
     ...magic.map(h => ({ ...h, score: h.confidence * h.length })),
@@ -50,6 +54,8 @@ export async function infer(args: string[]): Promise<number> {
     ...uuids.map(h => ({ ...h, score: h.confidence * h.length })),
     ...timestamps.map(h => ({ ...h, score: h.confidence * h.length })),
     ...ips.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...pe.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...elf.map(h => ({ ...h, score: h.confidence * h.length })),
   ];
 
   const model = resolve(allHypotheses, bytes.byteLength);

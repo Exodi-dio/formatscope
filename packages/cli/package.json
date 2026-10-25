@@ -6,12 +6,26 @@
     "formatscope": "./dist/index.js"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "pkg": "pkg . --output dist/formatscope"
   },
   "dependencies": {
     "@formatscope/core": "*"
   },
   "devDependencies": {
+    "pkg": "^5.8.1",
     "typescript": "^5.7.3"
+  },
+  "pkg": {
+    "assets": [
+      "dist/**/*"
+    ],
+    "targets": [
+      "node18-linux-x64",
+      "node18-macos-x64",
+      "node18-win-x64"
+    ],
+    "outputPath": "dist/bin"
   }
 }

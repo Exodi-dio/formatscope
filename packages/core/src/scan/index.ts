@@ -24,3 +24,9 @@ export { scanTimestamps } from "./timestamp/index";
 
 export type { Hypothesis as IPHypothesis } from "./ip/index";
 export { scanIPs } from "./ip/index";
+
+export type { Hypothesis as PEHypothesis } from "./pe/index";
+export { scanPE } from "./pe/index";
+
+export type { Hypothesis as ELFHypothesis } from "./elf/index";
+export { scanELF } from "./elf/index";
