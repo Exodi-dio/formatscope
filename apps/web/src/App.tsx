@@ -2,8 +2,8 @@ export function App() {
   return (
     <div
       style={{
-        background: "#0b0c0e",
-        color: "#eceef1",
+        background: "#ff0000",
+        color: "#ffffff",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -12,8 +12,8 @@ export function App() {
         fontFamily: "system-ui, sans-serif",
       }}
     >
-      <h1 style={{ fontSize: "2rem" }}>FormatScope works!</h1>
-      <p style={{ color: "#98a0ab" }}>React is rendering on mobile!</p>
+      <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>React Works!</h1>
+      <p>React is rendering on mobile!</p>
     </div>
   );
 }
