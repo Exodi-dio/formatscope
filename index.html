@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormatScope — Binary Format Workbench</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0b0c0e;
+      color: #eceef1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .container { max-width: 700px; padding: 2rem; }
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    h2 { font-size: 1.25rem; color: #7dd3a7; margin-bottom: 1rem; }
+    p { color: #98a0ab; line-height: 1.6; margin-bottom: 1.5rem; }
+    .btn {
+      display: inline-block;
+      background: #7dd3a7;
+      color: #0b0c0e;
+      text-decoration: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #5fb888; }
+    .features {
+      margin-top: 2.5rem;
+      text-align: left;
+    }
+    .features h3 { color: #eceef1; margin-bottom: 0.5rem; }
+    .features ul { color: #98a0ab; padding-left: 1.5rem; }
+    .features li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FormatScope</h1>
+    <p>Binary format workbench — infer the structure of unknown files, generate a parser, and prove it with a byte-for-byte round-trip.</p>
+    <a href="https://github.com/Exodi-dio/formatscope" class="btn">View on GitHub</a>
+    <div class="features">
+      <h3>Features</h3>
+      <ul>
+        <li>Drop any binary file — nothing leaves your browser</li>
+        <li>Entropy map + field tree visualization</li>
+        <li>Inference rules: magic, strings, periodicity, TLV, length-prefix, checksums</li>
+        <li>PE, ELF, ZIP, PDF, PNG, JPEG, GIF, BMP, WAV, MP3, SQLite detection</li>
+        <li>x86 opcode, UUID, timestamp, and IP address scanning</li>
+        <li>Generated TypeScript parser with node→line mapping</li>
+        <li>Byte-for-byte round-trip verification</li>
+        <li>Semantic diff between file versions</li>
+        <li>CLI: <code>formatscope inspect</code>, <code>infer</code>, <code>emit</code>, <code>verify</code>, <code>scan</code></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
