@@ -130,7 +130,7 @@ function decodeUintField(field: UintField, input: Uint8Array): UintValue {
 
   switch (field.length) {
     case 1:
-      return { kind: "uint", value: bytes[0] };
+      return { kind: "uint", value: bytes[0]! };
     case 2:
       return { kind: "uint", value: isLE ? readU16LE(bytes) : readU16BE(bytes) };
     case 4:
@@ -171,7 +171,7 @@ function encodeUintValue(
 function decodeAscii(bytes: Uint8Array): string {
   const chars: string[] = [];
   for (let i = 0; i < bytes.byteLength; i++) {
-    const b = bytes[i];
+    const b = bytes[i]!;
     if (b >= 0x20 && b <= 0x7e) {
       chars.push(String.fromCharCode(b));
     } else {
@@ -186,7 +186,7 @@ function encodeAsciiValue(value: AsciiValue): Uint8Array {
 }
 
 function decodeTlvField(field: TlvField, input: Uint8Array): TlvValue {
-  const tag = input.subarray(field.tagOffset, field.tagOffset + 1)[0];
+  const tag = input.subarray(field.tagOffset, field.tagOffset + 1)[0]!;
   const valueBytes = input.subarray(field.valueOffset, field.offset + field.length);
   return { kind: "tlv", tag, value: valueBytes.slice() };
 }
@@ -203,25 +203,25 @@ function encodeTlvValue(value: TlvValue): Uint8Array {
 // integer read helpers
 
 function readU16LE(bytes: Uint8Array): number {
-  return bytes[0] | (bytes[1] << 8);
+  return bytes[0]! | (bytes[1]! << 8);
 }
 
 function readU16BE(bytes: Uint8Array): number {
-  return (bytes[0] << 8) | bytes[1];
+  return (bytes[0]! << 8) | bytes[1]!;
 }
 
 function readU32LE(bytes: Uint8Array): number {
-  return bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+  return bytes[0]! | (bytes[1]! << 8) | (bytes[2]! << 16) | (bytes[3]! << 24);
 }
 
 function readU32BE(bytes: Uint8Array): number {
-  return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+  return (bytes[0]! << 24) | (bytes[1]! << 16) | (bytes[2]! << 8) | bytes[3]!;
 }
 
 function readU64LE(bytes: Uint8Array): bigint {
   let result = 0n;
   for (let i = 0; i < 8; i++) {
-    result += BigInt(bytes[i]) << (BigInt(i) * 8n);
+    result += BigInt(bytes[i]!) << (BigInt(i) * 8n);
   }
   return result;
 }
@@ -229,7 +229,7 @@ function readU64LE(bytes: Uint8Array): bigint {
 function readU64BE(bytes: Uint8Array): bigint {
   let result = 0n;
   for (let i = 0; i < 8; i++) {
-    result += BigInt(bytes[i]) << (BigInt(7 - i) * 8n);
+    result += BigInt(bytes[i]!) << (BigInt(7 - i) * 8n);
   }
   return result;
 }

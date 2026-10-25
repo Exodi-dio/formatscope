@@ -51,7 +51,7 @@ function diffValues(
       path,
       kind: "added",
       oldValue: null,
-      newValue: valueToString(newVal),
+      newValue: valueToString(newVal!),
     });
     return;
   }
@@ -60,7 +60,7 @@ function diffValues(
     changes.push({
       path,
       kind: "removed",
-      oldValue: valueToString(oldVal),
+      oldValue: valueToString(oldVal!),
       newValue: null,
     });
     return;
