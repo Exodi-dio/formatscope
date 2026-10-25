@@ -1,363 +1,310 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>FormatScope — Binary Format Workbench</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      margin: 0;
-      background: #0b0c0e;
-      color: #eceef1;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .app {
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 1.5rem;
-    }
-    header.topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      border-bottom: 1px solid var(--line);
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .brand-mark {
-      width: 32px;
-      height: 32px;
-      background: #111318;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-    .status {
-      padding: 5px 9px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .shell {
-      display: flex;
-      flex: 1;
-      background: var(--bg);
-    }
-    .sidebar {
-      width: 260px;
-      flex-shrink: 0;
-      background: #111318;
-      border-right: 1px solid var(--line);
-    }
-    .nav {
-      display: flex;
-      flex-direction: column;
-    }
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .nav-item:hover {
-      background: #151920;
-      color: var(--text);
-    }
-    .nav-item-active {
-      background: #151920;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--text);
-      font-weight: 500;
-    }
-    .main {
-      flex: 1;
-      background: var(--bg);
-      padding: 2rem;
-      overflow-y: auto;
-    }
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #111318;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 14px;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
-      margin-bottom: 24px;
-    }
-    .search-icon {
-      color: #98a0ab;
-    }
-    .search-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 0.95rem;
-      outline: none;
-    }
-    .search-divider {
-      color: #98a0ab;
-      font-size: 14px;
-    }
-    .content {
-      flex: 1;
-    }
-    .page-title {
-      margin: 0 0 12px 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .page-subtitle {
-      margin: 0 0 16px 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-    .drop-zone {
-      border: 2px dashed var(--line);
-      border-radius: 16px;
-      padding: 40px 24px;
-      text-align: center;
-      background: #111318;
-      margin-bottom: 24px;
-      cursor: pointer;
-    }
-    .drop-zone:hover {
-      border-color: var(--accent);
-      background: #151920;
-    }
-    .drop-zone-mark {
-      display: inline-flex;
-      gap: 26px;
-      padding: 9px 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #0d1013;
-      color: var(--accent);
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 11px;
-      margin-bottom: 16px;
-    }
-    .drop-zone h2 {
-      margin: 8px 0 4px 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .drop-zone p {
-      color: #98a0ab;
-      font-size: 14px;
-      line-height: 1.55;
-      max-width: 46ch;
-      margin: 0 auto;
-    }
-    .file-info {
-      margin-top: 24px;
-      background: #111318;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 20px 24px;
-    }
-    .file-info h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    .file-info-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      font-size: 14px;
-      color: #98a0ab;
-      font-family: ui-monospace, monospace;
-    }
-    .file-info-item .label {
-      color: var(--muted);
-    }
-    .inference-section {
-      margin-top: 24px;
-    }
-    .inference-section h3 {
-      margin: 0 0 12px 0;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .result-card {
-      background: #111318;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 12px;
-    }
-    .result-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .result-kind {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #7dd3a7;
-    }
-    .result-offset {
-      font-family: ui-monospace, monospace;
-      font-size: 0.85rem;
-      color: #98a0ab;
-    }
-    .result-details {
-      display: flex;
-      gap: 16px;
-      font-size: 0.9rem;
-      color: var(--muted);
-      font-family: ui-monospace, monospace;
-    }
-    .scan-section {
-      margin-top: 24px;
-    }
-    .scan-section h3 {
-      margin: 0 0 12px 0;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .scan-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0;
-      font-size: 0.9rem;
-      color: var(--text);
-      border-bottom: 1px solid #151920;
-    }
-    .scan-item:last-child {
-      border-bottom: none;
-    }
-    .scan-kind {
-      color: #7dd3a7;
-      font-family: ui-monospace, monospace;
-      font-size: 0.85rem;
-      width: 100px;
-    }
-    .scan-offset {
-      color: #98a0ab;
-      font-family: ui-monospace, monospace;
-      font-size: 0.85rem;
-      width: 80px;
-    }
-    .scan-confidence {
-      color: #7dd3a7;
-      font-family: ui-monospace, monospace;
-      font-size: 0.85rem;
-      width: 100px;
-    }
-    .verify-section {
-      margin-top: 24px;
-      background: #111318;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 20px 24px;
-    }
-    .verify-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .verify-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      font-family: ui-monospace, monospace;
-    }
-    .verify-badge.ok {
-      background: rgba(125, 211, 167, 0.15);
-      color: #7dd3a7;
-      border: 1px solid rgba(125, 211, 167, 0.2);
-    }
-    .verify-badge.fail {
-      background: rgba(255, 107, 107, 0.15);
-      color: #ff6b6b;
-      border: 1px solid rgba(255, 107, 107, 0.2);
-    }
-    .verify-offset {
-      color: #98a0ab;
-      font-family: ui-monospace, monospace;
-      font-size: 0.85rem;
-    }
-    .empty-state {
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-      padding: 40px 20px;
-    }
-    footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 24px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 10px;
-      letter-spacing: 0.04em;
-    }
-    .file-input {
-      display: none;
-    }
-    .btn {
-      padding: 8px 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #151920;
-      color: var(--text);
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-    .btn:hover {
-      border-color: var(--accent);
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>FormatScope — Binary Format Workbench</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  margin: 0;
+  background: #0a0a0e;
+  color: #eceef1;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.app {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid #242a33;
+  background: #0b0c0e;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #eceef1;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.brand-mark {
+  width: 30px;
+  height: 32px;
+  background: #111318;
+  border: 1px solid #242a33;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.brand-mark span { font-size: 16px; }
+.status {
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #98a0ab;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.shell {
+  display: flex;
+  flex: 1;
+  background: #0b0c0e;
+}
+.sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  background: #101118;
+  border-right: 1px solid var(--line);
+}
+.nav {
+  display: flex;
+  flex-direction: column;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav-item:hover {
+  background: #151920;
+  color: var(--text);
+}
+.nav-item-active {
+  background: #151920;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  font-weight: 500;
+}
+.main {
+  flex: 1;
+  background: var(--bg);
+  padding: 2rem;
+  overflow-y: auto;
+}
+.drop-zone {
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #101118;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.drop-zone:hover {
+  border-color: var(--accent);
+  background: #141a24;
+}
+.drop-zone-mark {
+  display: inline-flex;
+  gap: 22px;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #0d1013;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+.drop-zone h2 {
+  margin: 8px 0 4px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.drop-zone p {
+  color: #98a0ab;
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 46ch;
+  margin: 0 auto;
+}
+.file-info {
+  margin-top: 20px;
+  background: #101118;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+.file-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.file-info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 13px;
+  color: #98a0ab;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+.file-info-item .label { color: var(--muted); }
+.inference-section {
+  margin-top: 22px;
+}
+.inference-section h3 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.result-card {
+  background: #111318;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 10px;
+}
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.result-kind {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #7dd3a7;
+}
+.result-offset {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: #98a0ab;
+}
+.result-detail-row {
+  margin: 6px 0 6px 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+}
+.result-detail-row b { color: var(--text); }
+.verify-section {
+  margin-top: 24px;
+  background: #101118;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+.verify-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.verify-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: ui-monospace, monospace;
+}
+.verify-badge.ok { background: rgba(125,211,167,0.15); color: #7dd3a7; border: 1px solid rgba(125,211,167,0.2); }
+.verify-badge.fail { background: rgba(255,107,107,0.15); color: #ff6b6b; border: 1px solid rgba(255,107,107,0.2); }
+.verify-offset { font-size: 0.85rem; }
+.empty-state {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 30px 20px;
+}
+.file-input { display: none; }
+.btn {
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #151920;
+  color: var(--text);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); }
+.entropy-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 0.88rem;
+  color: var(--text);
+  border-bottom: 1px solid #151920;
+}
+.entropy-bar {
+  flex: 1;
+  height: 10px;
+  background: #111318;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.entropy-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: #7dd3a7;
+}
+.scan-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.88rem;
+  color: var(--text);
+  border-bottom: 1px solid #151920;
+}
+.scan-item:last-child { border-bottom: none; }
+.scan-kind {
+  color: #7dd3a7;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  width: 100px;
+}
+.scan-offset {
+  color: #98a0ab;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  width: 80px;
+}
+.scan-confidence {
+  color: #7dd3a7;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  width: 110px;
+}
+</style>
 </head>
 <body>
   <div class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">☐</div>
+        <div class="brand-mark">&#9652;</div>
         <span>FormatScope</span>
       </div>
       <div class="status">local only</div>
@@ -367,7 +314,7 @@
       <aside class="sidebar">
         <nav class="nav">
           <div class="nav-item nav-item-active">
-            <span class="nav-icon">🏠</span>
+            <span class="nav-icon">&#127968;</span>
             <span class="nav-label">Dashboard</span>
           </div>
           <div class="nav-item">
@@ -394,58 +341,37 @@
       </aside>
 
       <main class="main">
-        <div class="search-bar">
-          <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" placeholder="Search" />
-          <span class="search-divider">/</span>
+        <div class="drop-zone">
+          <div class="drop-zone-mark"><span>0x00</span><span>0xff</span></div>
+          <input type="file" id="file-input" class="file-input" />
+          <label class="drop-trigger" style="cursor: pointer;">
+            <h2>Drop a binary file</h2>
+            <p>Infer structure, generate parser, verify byte-for-byte round-trip. Nothing leaves this tab.</p>
+          </label>
         </div>
-        <div class="content">
-          <h1 class="page-title">FormatScope</h1>
-          <p class="page-subtitle">
-            Binary format workbench — infer structure, generate parser, prove with round-trip.
-          </p>
 
-          <div class="drop-zone">
-            <div class="drop-zone-mark">
-              <span>0x00</span>
-              <span>0xff</span>
-            </div>
-            <input type="file" id="file-input" class="file-input" />
-            <label class="drop-trigger" style="cursor: pointer;">
-              <h2>Drop a binary file</h2>
-              <p>Infer structure, generate parser, verify round-trip. Nothing leaves this tab.</p>
-            </label>
-          </div>
+        <div class="file-info">
+          <h3 id="file-name">No file loaded</h3>
+          <div class="file-info-item"><span class="label">Size</span><span id="file-size">-</span></div>
+          <div class="file-info-item"><span class="label">Type</span><span id="file-type">-</span></div>
+        </div>
 
-          <div class="file-info">
-            <h3 id="file-name">No file loaded</h3>
-            <div class="file-info-item">
-              <span class="label">Size</span>
-              <span id="file-size">—</span>
-            </div>
-            <div class="file-info-item">
-              <span class="label">Type</span>
-              <span id="file-type">—</span>
-            </div>
-          </div>
+        <div class="inference-section">
+          <h3>Inference Results</h3>
+          <div id="inference-results"></div>
+        </div>
 
-          <div class="inference-section">
-            <h3>Inference Results</h3>
-            <div id="inference-results"></div>
-          </div>
+        <div class="scan-section">
+          <h3>Scan Results</h3>
+          <div id="scan-results"></div>
+        </div>
 
-          <div class="scan-section">
-            <h3>Scan Results</h3>
-            <div id="scan-results"></div>
-          </div>
-
-          <div class="verify-section">
-            <div class="verify-header">
-              <span class="verify-badge" id="verify-badge">
-                <span style="color:#7dd3a7">●</span> verify ok
-              </span>
-              <span class="verify-offset">0x0000</span>
-            </div>
+        <div class="verify-section">
+          <div class="verify-header">
+            <span class="verify-badge" id="verify-badge">
+              <span style="color:#7dd3a7">&#9679;</span> verify ok
+            </span>
+            <span class="verify-offset">0x0000</span>
           </div>
         </div>
       </div>
@@ -468,32 +394,22 @@
     const verifyBadge = document.getElementById('verify-badge');
     const verifyOffsetEl = document.getElementById('verify-offset');
 
-    function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
+    function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-    function u32LE(bytes, offset) {
-      return bytes[offset] | (bytes[offset+1]<<8) | (bytes[offset+2]<<16) | (bytes[offset+3]<<24);
-    }
-
-    function crc32(data) {
-      let crc = 0xffffffff;
-      for (let i = 0; i < data.byteLength; i++) {
-        crc ^= data[i];
-        for (let j = 0; j < 8; j++) {
-          crc = (crc & 1) ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1;
-        }
+    function shannon(window) {
+      const length = window.byteLength;
+      if (length === 0) return 0;
+      const counts = new Uint32Array(256);
+      for (let i = 0; i < length; i++) counts[window[i]]++;
+      let entropy = 0;
+      const invLength = 1 / length;
+      for (let s = 0; s < 256; s++) {
+        const c = counts[s];
+        if (c === 0) continue;
+        const p = c * invLength;
+        entropy -= p * Math.log2(p);
       }
-      return (crc ^ 0xffffffff) >>> 0;
-    }
-
-    function adler32(data) {
-      let a = 1, b = 0, MOD = 65521;
-      for (let i = 0; i < data.byteLength; i++) {
-        a = (a + data[i]) % MOD;
-        b = (b + a) % MOD;
-      }
-      return (b << 16) | a;
+      return entropy;
     }
 
     function scanMagic(bytes) {
@@ -512,9 +428,9 @@
         {name:'BMP', bytes:[0x42,0x4d]},
         {name:'WAV', bytes:[0x52,0x49,0x46,0x46]},
         {name:'MP3', bytes:[0x49,0x44,0x33]},
-        {name:'SQLite', bytes:[0x53,0x51,0x4c,0x69,0x74,0x65]},
+        {name:'SQLite', bytes:[0x53,0x51,0x4c,0x69,0x74,0x65]}
       ];
-      const results = [];
+      const hypotheses = [];
       for (const magic of magics) {
         if (bytes.byteLength < magic.bytes.byteLength) continue;
         let match = true;
@@ -545,7 +461,7 @@
       return results;
     }
 
-    function scanPeriodicity(bytes) {
+    function scanPeriodicity(bytes){
       const results = [];
       const maxStride = Math.min(32, Math.floor(bytes.byteLength/2));
       for (let stride = 1; stride <= maxStride; stride++) {
@@ -572,39 +488,79 @@
       return regions;
     }
 
-    function shannon(window) {
-      const length = window.byteLength;
-      if (length === 0) return 0;
-      const counts = new Uint32Array(256);
-      for (let i = 0; i < length; i++) counts[window[i]]++;
-      let entropy = 0;
-      const invLength = 1 / length;
-      for (let s = 0; s < 256; s++) {
-        const c = counts[s];
-        if (c === 0) continue;
-        const p = c * invLength;
-        entropy -= p * Math.log2(p);
+    function isPrintable(b) { return b >= 0x20 && b <= 0x7e; }
+
+    function scanXORSingle(bytes) {
+      const results = [];
+      const len = bytes.byteLength;
+      if (len === 0) return results;
+      const candidates = [];
+      for (let key = 0; key < 256; key++) {
+        let match = 0;
+        for (let i = 0; i < len; i++) {
+          const b = bytes[i] ^ key;
+          if (b >= 0x20 && b <= 0x7e) match++;
+        }
+        const conf = match / len;
+        if (conf > 0.7) candidates.push({offset:0, length:len, kind:'xor', confidence:conf, evidence:[`XOR single-byte key 0x${key.toString(16).padStart(2,'0')}`], key:key});
       }
-      return entropy;
+      candidates.sort((a,b) => b.confidence - a.confidence);
+      return candidates.slice(0, 3);
     }
 
-    function decode(schema, input) {
-      return { schema, root: { kind:'opaque', bytes: input.slice() } };
+    function scanXORRepeating(bytes) {
+      const results = [];
+      const len = bytes.byteLength;
+      if (len < 8) return results;
+      const best = [];
+      for (let stride = 1; stride <= Math.min(64, Math.floor(len/2)); stride++) {
+        const groups = [];
+        for (let i = 0; i < stride; i++) groups[i] = [];
+        for (let i = 0; i < len; i++) groups[i % stride].push(bytes[i]);
+        let totalMatch = 0, totalPos = 0;
+        const key = [];
+        for (let i = 0; i < stride; i++) {
+          const group = groups[i];
+          const counts = new Uint32Array(256);
+          for (const b of group) counts[b]++;
+          let bestCount = 0, bestSym = 0;
+          for (let s = 0; s < 256; s++) {
+            if (counts[s] > bestCount) { bestCount = counts[s]; bestSym = s; }
+          }
+          key[i] = bestSym;
+          totalMatch += bestCount;
+          totalPos += group.length;
+        }
+        const conf = totalMatch / totalPos;
+        if (conf > 0.75) {
+          results.push({kind:'xor', offset:0, length:len, confidence:conf, evidence:[`XOR repeating key stride=${stride}`], key:key});
+        }
+      }
+      results.sort((a,b) => b.confidence - a.confidence);
+      return results.slice(0, 3);
     }
 
-    function encode(doc) {
-      return doc.root.bytes.slice();
-    }
-
-    function verifyBytes(a, b) {
-      let idx = 0;
-      while (idx < a.byteLength && idx < b.byteLength && a[idx] === b[idx]) idx++;
-      return {
-        ok: idx === a.byteLength && a.byteLength === b.byteLength,
-        firstDiffOffset: idx === Math.min(a.byteLength, b.byteLength) && a.byteLength === b.byteLength ? null : idx,
-        inputLength: a.byteLength,
-        outputLength: b.byteLength,
-      };
+    function scanECB(bytes) {
+      const results = [];
+      const len = bytes.byteLength;
+      if (len < 32) return results;
+      const blocks = [];
+      for (let i = 0; i + 16 <= len; i += 16) {
+        const hex = [];
+        for (let j = 0; j < 16; j++) hex.push(bytes[i+j].toString(16).padStart(2,'0'));
+        blocks.push(hex.join(''));
+      }
+      const seen = {};
+      let repeats = 0;
+      for (const b of blocks) {
+        if (seen[b]) repeats++;
+        else seen[b] = 1;
+      }
+      const ratio = blocks.length > 0 ? repeats / blocks.length : 0;
+      if (ratio > 0.1) {
+        results.push({kind:'aes', offset:0, length:len, confidence:Math.min(0.99, ratio * 2), evidence:[`AES-ECB-like: ${repeats} repeated 16-byte blocks`]});
+      }
+      return results;
     }
 
     function loadFile(file) {
@@ -631,11 +587,18 @@
       const magic = scanMagic(bytes);
       const strings = scanStrings(bytes);
       const periodicity = scanPeriodicity(bytes);
+      const entropy = scanEntropy(bytes);
+      const xorsingle = scanXORSingle(bytes);
+      const xorrepeat = scanXORRepeating(bytes);
+      const ecb = scanECB(bytes);
 
       const all = [
         ...magic.map(h => ({...h, score: h.confidence * h.length})),
         ...strings.map(h => ({...h, score: h.confidence * h.length})),
         ...periodicity.map(h => ({...h, score: h.confidence * h.length})),
+        ...xorsingle.map(h => ({...h, score: h.confidence * h.length})),
+        ...xorrepeat.map(h => ({...h, score: h.confidence * h.length})),
+        ...ecb.map(h => ({...h, score: h.confidence * h.length})),
       ];
       all.sort((a,b) => b.score - a.score || a.offset - b.offset);
 
@@ -656,6 +619,7 @@
               <span>length: ${h.length}</span>
               <span>confidence: ${(h.confidence*100).toFixed(1)}%</span>
               ${h.name ? `<span>name: ${escapeHtml(h.name)}</span>` : ''}
+              ${h.key !== undefined ? `<span>key: 0x${h.key.toString(16).padStart(2,'0')}</span>` : ''}
             </div>
           `;
           resultsEl.appendChild(div);
@@ -685,8 +649,8 @@
       const badge = document.getElementById('verify-badge');
       const offsetEl = document.getElementById('verify-offset');
       badge.className = result.ok ? 'verify-badge ok' : 'verify-badge fail';
-      badge.innerHTML = `<span style="color:${result.ok ? '#7dd3a7' : '#ff6b6b'}">●</span> ${result.ok ? 'verify ok' : 'verify failed'}`;
-      offsetEl.textContent = result.firstDiffOffset !== null ? `0x${result.firstDiffOffset.toString(16).padStart(4,'0')}` : '—';
+      badge.innerHTML = `<span style="color:${result.ok ? '#7dd3a7' : '#ff6b6b'}">&#9679;</span> ${result.ok ? 'verify ok' : 'verify failed'}`;
+      offsetEl.textContent = result.firstDiffOffset !== null ? '0x'+result.firstDiffOffset.toString(16).padStart(4,'0') : '—';
     }
 
     function formatSize(bytes) {
