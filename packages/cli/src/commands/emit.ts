@@ -1,5 +1,5 @@
 import * as fs from "node:fs";
-import { codegen } from "@formatscope/core";
+import { codegen, type Schema } from "@formatscope/core";
 
 export async function emit(args: string[]): Promise<number> {
   if (args.length < 1 || args.length > 2) {
@@ -25,7 +25,7 @@ export async function emit(args: string[]): Promise<number> {
     return 2;
   }
 
-  const result = codegen(schema as Record<string, unknown>);
+  const result = codegen(schema as Schema);
 
   if (outputPath) {
     import("node:fs/promises").then(({ writeFile }) => {

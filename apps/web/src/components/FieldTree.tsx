@@ -34,7 +34,6 @@ export function FieldTree({
       <div className="field-tree-header">Field tree</div>
       <FieldNode
         field={schema.root}
-        path="root"
         depth={0}
         onClick={handleFieldClick}
         highlightedOffset={highlightedOffset}
