@@ -1,228 +1,672 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <title>FormatScope — Binary Format Workbench</title>
-    <style>
-      * { box-sizing: border-box; }
-      html, body {
-        margin: 0;
-        background: #0b0c0e;
-        color: #eceef1;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-      .app {
-        max-width: 1200px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 1rem;
-      }
-      header.topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem;
-        border-bottom: 1px solid var(--line);
-      }
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--text);
-        font-size: 1.25rem;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-      }
-      .brand-mark {
-        width: 32px;
-        height: 32px;
-        background: #111318;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .status {
-        padding: 5px 9px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        color: var(--muted);
-        font-family: ui-monospace, SFMono-Regular, monospace;
-        font-size: 10px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-      .shell {
-        display: flex;
-        flex: 1;
-      }
-      .sidebar {
-        width: 260px;
-        flex-shrink: 0;
-        background: var(--panel);
-        border-right: 1px solid var(--line);
-      }
-      .nav {
-        display: flex;
-        flex-direction: column;
-      }
-      .nav-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 14px;
-        color: var(--muted);
-        font-size: 0.9rem;
-        text-decoration: none;
-        cursor: pointer;
-      }
-      .nav-item:hover {
-        background: #151920;
-        color: var(--text);
-      }
-      .nav-item-active {
-        background: #151920;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        color: var(--text);
-        font-weight: 500;
-      }
-      .main {
-        flex: 1;
-        background: var(--bg);
-        padding: 2rem;
-      }
-      .search-bar {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: #111318;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 10px 14px;
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-        margin-bottom: 24px;
-      }
-      .search-icon {
-        color: #98a0ab;
-      }
-      .search-input {
-        flex: 1;
-        background: transparent;
-        border: none;
-        color: var(--text);
-        font-size: 0.95rem;
-        outline: none;
-      }
-      .search-divider {
-        color: #98a0ab;
-        font-size: 14px;
-      }
-      .content {
-        flex: 1;
-      }
-      .page-title {
-        margin: 0 0 8px 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text);
-      }
-      .page-subtitle {
-        margin: 0;
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-      footer {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 18px 24px;
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        font-family: ui-monospace, SFMono-Regular, monospace;
-        font-size: 10px;
-        letter-spacing: 0.04em;
-      }
-      :root {
-        color-scheme: dark;
-        --bg: #0b0c0e;
-        --panel: #111318;
-        --panel-raised: #151920;
-        --line: #242a33;
-        --line-strong: #39414d;
-        --text: #eceef1;
-        --muted: #98a0ab;
-        --accent: #7dd3a7;
-        --accent-dim: #2c5c46;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="app">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark">☐</div>
-          <span>FormatScope</span>
-        </div>
-        <div class="status">local only</div>
-      </header>
-
-      <div class="shell">
-        <aside class="sidebar">
-          <nav class="nav">
-            <div class="nav-item nav-item-active">
-              <span class="nav-icon">🏠</span>
-              <span class="nav-label">Dashboard</span>
-            </div>
-            <div class="nav-item">
-              <span class="nav-icon">📋</span>
-              <span class="nav-label">Tasks</span>
-            </div>
-            <div class="nav-item">
-              <span class="nav-icon">📥</span>
-              <span class="nav-label">Inbox</span>
-            </div>
-            <div class="nav-item">
-              <span class="nav-icon">📅</span>
-              <span class="nav-label">Calendar</span>
-            </div>
-            <div class="nav-item">
-              <span class="nav-icon">👥</span>
-              <span class="nav-label">Meeting</span>
-            </div>
-            <div class="nav-item">
-              <span class="nav-icon">📦</span>
-              <span class="nav-label">Dock</span>
-            </div>
-          </nav>
-        </aside>
-
-        <main class="main">
-          <div class="search-bar">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" placeholder="Search" />
-            <span class="search-divider">/</span>
-          </div>
-          <div class="content">
-            <h1 class="page-title">FormatScope</h1>
-            <p class="page-subtitle">
-              Binary format workbench — infer the structure of unknown files,
-              generate a parser, and prove it with a byte-for-byte round-trip.
-            </p>
-          </div>
-        </main>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>FormatScope — Binary Format Workbench</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      margin: 0;
+      background: #0b0c0e;
+      color: #eceef1;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .app {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header.topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid #242a33;
+      background: #0b0c0e;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #eceef1;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      background: #111318;
+      border: 1px solid #242a33;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .status {
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .shell {
+      display: flex;
+      flex: 1;
+      background: #0b0c0e;
+    }
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: #111318;
+      border-right: 1px solid var(--line);
+    }
+    .nav {
+      display: flex;
+      flex-direction: column;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background: #151920;
+      color: var(--text);
+    }
+    .nav-item-active {
+      background: #151920;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .main {
+      flex: 1;
+      background: var(--bg);
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #111318;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+      margin-bottom: 24px;
+    }
+    .search-icon {
+      color: #98a0ab;
+    }
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .search-divider {
+      color: #98a0ab;
+      font-size: 14px;
+    }
+    .content {
+      flex: 1;
+    }
+    .page-title {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .page-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .drop-zone {
+      border: 2px dashed var(--line);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      background: #111318;
+      margin-bottom: 24px;
+      cursor: pointer;
+    }
+    .drop-zone:hover {
+      border-color: var(--accent);
+      background: #151920;
+    }
+    .drop-zone-mark {
+      display: inline-flex;
+      gap: 26px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0d1013;
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 11px;
+      margin-bottom: 16px;
+    }
+    .drop-zone h2 {
+      margin: 8px 0 4px 0;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .drop-zone p {
+      color: #98a0ab;
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 46ch;
+      margin: 0 auto;
+    }
+    .file-info {
+      margin-top: 24px;
+      background: #111318;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+    .file-info h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .file-info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 14px;
+      color: #98a0ab;
+      font-family: var(--mono, ui-monospace, monospace);
+    }
+    .file-info-item .label {
+      color: var(--muted);
+    }
+    .inference-section {
+      margin-top: 24px;
+    }
+    .inference-section h3 {
+      margin: 0 0 12px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .result-card {
+      background: #111318;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .result-kind {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #7dd3a7;
+    }
+    .result-offset {
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      color: #98a0ab;
+    }
+    .result-details {
+      display: flex;
+      gap: 16px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-family: ui-monospace, monospace;
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+    .file-input {
+      display: none;
+    }
+    .btn {
+      padding: 8px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #151920;
+      color: var(--text);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .btn:hover {
+      border-color: var(--accent);
+    }
+    .file-info-card {
+      margin-top: 1rem;
+      background: #111318;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 600px;
+    }
+    .scan-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      color: var(--text);
+      border-bottom: 1px solid #151920;
+    }
+    .scan-item:last-child {
+      border-bottom: none;
+    }
+    .scan-kind {
+      color: #7dd3a7;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      width: 100px;
+    }
+    .scan-offset {
+      color: #98a0ab;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      width: 80px;
+    }
+    .scan-confidence {
+      color: #555;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      width: 100px;
+    }
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 40px 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">☐</div>
+        <span>FormatScope</span>
       </div>
+      <div class="status">LOCAL ONLY</div>
+    </header>
 
-      <footer>
-        <span>core 0.1.0</span>
-        <span>no uploads · no telemetry</span>
-      </footer>
+    <div class="shell">
+      <aside class="sidebar">
+        <nav class="nav">
+          <div class="nav-item nav-item-active">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Dashboard</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">Tasks</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📥</span>
+            <span class="nav-label">Inbox</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📅</span>
+            <span class="nav-label">Calendar</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span class="nav-label">Meeting</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📦</span>
+            <span class="nav-label">Dock</span>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search" />
+          <span class="search-divider">/</span>
+        </div>
+        <div class="content">
+          <h1 class="page-title">FormatScope</h1>
+          <p class="page-subtitle">
+            Binary format workbench — infer structure, generate parser, prove with round-trip.
+          </p>
+
+          <div class="drop-zone">
+            <div class="drop-zone-mark">
+              <span>0x00</span>
+              <span>0xff</span>
+            </div>
+            <input type="file" id="file-input" class="file-input" />
+            <label class="drop-trigger" style="cursor: pointer;">
+              <h2>Drop a binary file</h2>
+              <p>Infer structure, generate parser, verify round-trip. Nothing leaves this tab.</p>
+            </label>
+          </div>
+
+          <div class="file-info">
+            <h3 id="file-name">No file loaded</h3>
+            <div class="file-info-item">
+              <span class="label">Size</span>
+              <span id="file-size">—</span>
+            </div>
+            <div class="file-info-item">
+              <span class="label">Type</span>
+              <span id="file-type">—</span>
+            </div>
+          </div>
+
+          <div class="inference-section">
+            <h3>Inference Results</h3>
+            <div id="inference-results" class="result-card">
+              <div class="result-header">
+                <span class="result-kind">none</span>
+                <span class="result-offset">0x0000</span>
+              </div>
+              <div class="result-details">
+                <span>No file loaded</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="inference-section">
+            <h3>Scan Results</h3>
+            <div id="scan-results"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  </body>
+
+    <footer>
+      <span>core 0.1.0</span>
+      <span>no uploads · no telemetry</span>
+    </footer>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const dropZone = document.querySelector('.drop-zone');
+    const fileNameEl = document.getElementById('file-name');
+    const fileSizeEl = document.getElementById('file-size');
+    const fileTypeEl = document.getElementById('file-type');
+    const resultsEl = document.getElementById('inference-results');
+    const scanResultsEl = document.getElementById('scan-results');
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function u32LE(b, o) { return b[o] | (b[o+1]<<8) | (b[o+2]<<16) | (b[o+3]<<24); }
+    function crc32(data) {
+      let crc = 0xffffffff;
+      for (let i = 0; i < data.byteLength; i++) {
+        crc ^= data[i];
+        for (let j = 0; j < 8; j++) {
+          crc = (crc & 1) ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1;
+        }
+      }
+      return (crc ^ 0xffffffff) >>> 0;
+    }
+
+    function adler32(data) {
+      let a = 1, b = 0, MOD = 65521;
+      for (let i = 0; i < data.byteLength; i++) {
+        a = (a + data[i]) % MOD;
+        b = (b + a) % MOD;
+      }
+      return (b << 16) | a;
+    }
+
+    function scanMagic(bytes) {
+      const magics = [
+        {name:'FSBX', bytes:[0x46,0x53,0x42,0x58]},
+        {name:'FSRT', bytes:[0x46,0x53,0x52,0x54]},
+        {name:'FSTL', bytes:[0x46,0x53,0x54,0x4c]},
+        {name:'MZ', bytes:[0x4d,0x5a]},
+        {name:'PE', bytes:[0x50,0x45,0x00,0x00]},
+        {name:'ELF', bytes:[0x7f,0x45,0x4c,0x46]},
+        {name:'ZIP', bytes:[0x50,0x4b,0x03,0x04]},
+        {name:'PDF', bytes:[0x25,0x50,0x44,0x46]},
+        {name:'PNG', bytes:[0x89,0x50,0x4e,0x47]},
+        {name:'JPEG', bytes:[0xff,0xd8,0xff]},
+        {name:'GIF', bytes:[0x47,0x49,0x46,0x38]},
+        {name:'BMP', bytes:[0x42,0x4d]},
+      ];
+      const results = [];
+      for (const m of magics) {
+        if (bytes.byteLength < m.bytes.byteLength) continue;
+        let match = true;
+        for (let i = 0; i < m.bytes.byteLength; i++) {
+          if (bytes[i] !== m.bytes[i]) { match = false; break; }
+        }
+        if (match) results.push({kind:'magic', offset:0, length:m.bytes.byteLength, name:m.name, confidence:0.95});
+      }
+      return results;
+    }
+
+    function scanStrings(bytes) {
+      const results = [];
+      let start = -1;
+      const MIN = 4;
+      for (let i = 0; i < bytes.byteLength; i++) {
+        const b = bytes[i];
+        if (b >= 0x20 && b <= 0x7e) {
+          if (start === -1) start = i;
+        } else {
+          if (start !== -1) {
+            if (i - start >= MIN) results.push({kind:'string', offset:start, length:i-start, confidence:0.60});
+            start = -1;
+          }
+        }
+      }
+      if (start !== -1 && bytes.byteLength - start >= MIN) results.push({kind:'string', offset:start, length:bytes.byteLength-start, confidence:0.60});
+      return results;
+    }
+
+    function scanPeriodicity(bytes) {
+      const results = [];
+      const maxStride = Math.min(32, Math.floor(bytes.byteLength/2));
+      for (let stride = 1; stride <= maxStride; stride++) {
+        let matches = 0, total = 0;
+        for (let i = 0; i < bytes.byteLength - stride; i++) {
+          total++;
+          if (bytes[i] === bytes[i+stride]) matches++;
+        }
+        if (total === 0) continue;
+        const ratio = matches / total;
+        if (ratio < 0.8) continue;
+        results.push({kind:'periodicity', offset:0, length:bytes.byteLength, confidence:Math.min(0.95, 0.70 + 0.05*stride)*ratio});
+      }
+      return results;
+    }
+
+    function scanEntropy(bytes, windowSize=16) {
+      const regions = [];
+      const step = Math.min(windowSize, bytes.byteLength);
+      for (let offset = 0; offset < bytes.byteLength; offset += step) {
+        const length = Math.min(step, bytes.byteLength - offset);
+        regions.push({offset, length, entropy: shannon(bytes.subarray(offset, offset+length))});
+      }
+      return regions;
+    }
+
+    function shannon(window) {
+      const length = window.byteLength;
+      if (length === 0) return 0;
+      const counts = new Uint32Array(256);
+      for (let i = 0; i < length; i++) counts[window[i]]++;
+      let entropy = 0;
+      const invLen = 1 / length;
+      for (let s = 0; s < 256; s++) {
+        const c = counts[s];
+        if (c === 0) continue;
+        const p = c * invLen;
+        entropy -= p * Math.log2(p);
+      }
+      return entropy;
+    }
+
+    function updateResults(bytes) {
+      const magic = scanMagic(bytes);
+      const strings = scanStrings(bytes);
+      const periodicity = scanPeriodicity(bytes);
+      const entropy = scanEntropy(bytes);
+
+      const all = [
+        ...magic.map(h => ({...h, score: h.confidence * h.length})),
+        ...strings.map(h => ({...h, score: h.confidence * h.length})),
+        ...periodicity.map(h => ({...h, score: h.confidence * h.length})),
+      ];
+      all.sort((a,b) => b.score - a.score || a.offset - b.offset);
+
+      const res = document.getElementById('inference-results');
+      res.innerHTML = '';
+      if (all.length === 0) {
+        res.innerHTML = '<div class="empty-state">No inference rules matched</div>';
+      } else {
+        for (const h of all.slice(0, 10)) {
+          const div = document.createElement('div');
+          div.className = 'result-card';
+          div.innerHTML = `
+            <div class="result-header">
+              <span class="result-kind">${escapeHtml(h.kind)}</span>
+              <span class="result-offset">0x${h.offset.toString(16).padStart(4,'0')}</span>
+            </div>
+            <div class="result-details">
+              <span>length: ${h.length}</span>
+              <span>confidence: ${(h.confidence*100).toFixed(1)}%</span>
+              ${h.name ? `<span>name: ${escapeHtml(h.name)}</span>` : ''}
+            </div>
+          `;
+          res.appendChild(div);
+        }
+      }
+
+      const scanRes = document.getElementById('scan-results');
+      scanRes.innerHTML = '';
+      const allScans = [...magic, ...strings, ...periodicity];
+      if (allScans.length === 0) {
+        scanRes.innerHTML = '<div class="empty-state">No scan results</div>';
+      } else {
+        for (const h of allScans.slice(0, 20)) {
+          const div = document.createElement('div');
+          div.className = 'scan-item';
+          div.innerHTML = `
+            <span class="scan-kind">${escapeHtml(h.kind)}</span>
+            <span class="scan-offset">0x${h.offset.toString(16).padStart(4,'0')}</span>
+            <span class="scan-confidence">${(h.confidence*100).toFixed(1)}%</span>
+          `;
+          scanRes.appendChild(div);
+        }
+      }
+
+      // Verify round-trip
+      const decoded = encode(decode(bytes));
+      const result = verifyBytes(bytes, decoded);
+      document.getElementById('verify-ok').textContent = result.ok ? 'OK' : 'FAILED';
+      document.getElementById('verify-ok').style.color = result.ok ? '#7dd3a7' : '#ff6b6b';
+      document.getElementById('verify-offset').textContent = result.firstDiffOffset !== null ? `0x${result.firstDiffOffset.toString(16).padStart(4,'0')}` : '—';
+    }
+
+    function decode(schema, input) {
+      return { schema, root: { kind:'opaque', bytes: input.slice() } };
+    }
+    function encode(doc) { return doc.root.bytes.slice(); }
+    function verifyBytes(a, b) {
+      let idx = 0;
+      while (idx < a.byteLength && idx < b.byteLength && a[idx] === b[idx]) idx++;
+      return { ok: idx === a.byteLength && a.byteLength === b.byteLength, firstDiffOffset: idx === Math.min(a.byteLength, b.byteLength) && a.byteLength === b.byteLength ? null : idx, inputLength: a.byteLength, outputLength: b.byteLength };
+    }
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      loadFile(file);
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (file) loadFile(file);
+    });
+
+    function loadFile(file) {
+      fileNameEl.textContent = file.name;
+      fileSizeEl.textContent = formatSize(file.size);
+      fileTypeEl.textContent = file.type || 'application/octet-stream';
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const bytes = new Uint8Array(e.target.result);
+        updateResults(bytes);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function formatSize(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        fileInput.click();
+      }
+    });
+  </script>
+</body>
 </html>
