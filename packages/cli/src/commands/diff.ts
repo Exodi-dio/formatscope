@@ -13,8 +13,10 @@ export async function diff(args: string[]): Promise<number> {
   let bytes2: Uint8Array;
 
   try {
-    bytes1 = fs.readFileSync(filePath1) as unknown as Uint8Array;
-    bytes2 = fs.readFileSync(filePath2) as unknown as Uint8Array;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    bytes1 = fs.readFileSync(filePath1) as any as Uint8Array;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    bytes2 = fs.readFileSync(filePath2) as any as Uint8Array;
   } catch (err) {
     console.error(`Cannot read file: ${err instanceof Error ? err.message : String(err)}`);
     return 2;
