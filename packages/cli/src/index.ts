@@ -8,6 +8,10 @@ import { diff } from "./commands/diff.js";
 import { scan } from "./commands/scan.js";
 import { strings } from "./commands/strings.js";
 import { magic } from "./commands/magic.js";
+import { x86 } from "./commands/x86.js";
+import { uuid } from "./commands/uuid.js";
+import { timestamp } from "./commands/timestamp.js";
+import { ip } from "./commands/ip.js";
 
 const commands: Record<string, (args: string[]) => Promise<number>> = {
   inspect,
@@ -18,6 +22,10 @@ const commands: Record<string, (args: string[]) => Promise<number>> = {
   scan,
   strings,
   magic,
+  x86,
+  uuid,
+  timestamp,
+  ip,
 };
 
 const [command, ...args] = process.argv.slice(2);
@@ -34,6 +42,10 @@ if (!command || command === "--help" || command === "-h") {
   console.log("  scan   <file>     Show all inference rules that matched");
   console.log("  strings <file>    List printable string runs");
   console.log("  magic  <file>     List detected magic headers");
+  console.log("  x86    <file>     List x86 opcode runs");
+  console.log("  uuid   <file>     List UUID/GUID patterns");
+  console.log("  timestamp <file>  List unix timestamps");
+  console.log("  ip     <file>     List IP addresses");
   process.exit(0);
 }
 

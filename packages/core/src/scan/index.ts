@@ -12,3 +12,15 @@ export { scanLengthPrefix } from "./length-prefix/index";
 
 export type { ChecksumCandidate } from "./checksum/index";
 export { scanChecksum } from "./checksum/index";
+
+export type { Hypothesis as X86Hypothesis } from "./x86/index";
+export { scanX86 } from "./x86/index";
+
+export type { Hypothesis as UUIDHypothesis } from "./uuid/index";
+export { scanUUID } from "./uuid/index";
+
+export type { Hypothesis as TimestampHypothesis } from "./timestamp/index";
+export { scanTimestamps } from "./timestamp/index";
+
+export type { Hypothesis as IPHypothesis } from "./ip/index";
+export { scanIPs } from "./ip/index";

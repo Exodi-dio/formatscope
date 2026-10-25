@@ -5,6 +5,10 @@ import {
   scanPeriodicity,
   scanLengthPrefix,
   scanChecksum,
+  scanX86,
+  scanUUID,
+  scanTimestamps,
+  scanIPs,
   resolve,
   opaqueSchema,
   type Schema,
@@ -31,6 +35,10 @@ export async function infer(args: string[]): Promise<number> {
   const periodicity = scanPeriodicity(bytes);
   const lengthPrefix = scanLengthPrefix(bytes);
   const checksum = scanChecksum(bytes);
+  const x86 = scanX86(bytes);
+  const uuids = scanUUID(bytes);
+  const timestamps = scanTimestamps(bytes);
+  const ips = scanIPs(bytes);
 
   const allHypotheses = [
     ...magic.map(h => ({ ...h, score: h.confidence * h.length })),
@@ -38,6 +46,10 @@ export async function infer(args: string[]): Promise<number> {
     ...periodicity.map(h => ({ ...h, score: h.confidence * h.length })),
     ...lengthPrefix,
     ...checksum,
+    ...x86.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...uuids.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...timestamps.map(h => ({ ...h, score: h.confidence * h.length })),
+    ...ips.map(h => ({ ...h, score: h.confidence * h.length })),
   ];
 
   const model = resolve(allHypotheses, bytes.byteLength);

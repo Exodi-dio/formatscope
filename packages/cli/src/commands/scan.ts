@@ -5,6 +5,10 @@ import {
   scanPeriodicity,
   scanLengthPrefix,
   scanChecksum,
+  scanX86,
+  scanUUID,
+  scanTimestamps,
+  scanIPs,
 } from "@formatscope/core";
 
 export async function scan(args: string[]): Promise<number> {
@@ -28,6 +32,10 @@ export async function scan(args: string[]): Promise<number> {
   const periodicity = scanPeriodicity(bytes);
   const lengthPrefix = scanLengthPrefix(bytes);
   const checksum = scanChecksum(bytes);
+  const x86 = scanX86(bytes);
+  const uuids = scanUUID(bytes);
+  const timestamps = scanTimestamps(bytes);
+  const ips = scanIPs(bytes);
 
   console.log(`File: ${filePath}`);
   console.log(`Size: ${bytes.byteLength} bytes`);
@@ -69,6 +77,38 @@ export async function scan(args: string[]): Promise<number> {
     console.log("Checksums:");
     for (const c of checksum) {
       console.log(`  0x${c.offset.toString(16).padStart(4, "0")} len=${c.length} conf=${c.confidence.toFixed(2)}`);
+    }
+    console.log("");
+  }
+
+  if (x86.length > 0) {
+    console.log("x86 opcode runs:");
+    for (const x of x86) {
+      console.log(`  ${x.evidence.join(", ")} conf=${x.confidence.toFixed(2)}`);
+    }
+    console.log("");
+  }
+
+  if (uuids.length > 0) {
+    console.log("UUIDs:");
+    for (const u of uuids) {
+      console.log(`  ${u.evidence.join(", ")} conf=${u.confidence.toFixed(2)}`);
+    }
+    console.log("");
+  }
+
+  if (timestamps.length > 0) {
+    console.log("Timestamps:");
+    for (const t of timestamps) {
+      console.log(`  ${t.evidence.join(", ")} conf=${t.confidence.toFixed(2)}`);
+    }
+    console.log("");
+  }
+
+  if (ips.length > 0) {
+    console.log("IP addresses:");
+    for (const ip of ips) {
+      console.log(`  ${ip.evidence.join(", ")} conf=${ip.confidence.toFixed(2)}`);
     }
   }
 
