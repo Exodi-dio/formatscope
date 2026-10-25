@@ -4,10 +4,225 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
-    <title>FormatScope</title>
+    <title>FormatScope — Binary Format Workbench</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        background: #0b0c0e;
+        color: #eceef1;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .app {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      header.topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text);
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+        background: #111318;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .status {
+        padding: 5px 9px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .shell {
+        display: flex;
+        flex: 1;
+      }
+      .sidebar {
+        width: 260px;
+        flex-shrink: 0;
+        background: var(--panel);
+        border-right: 1px solid var(--line);
+      }
+      .nav {
+        display: flex;
+        flex-direction: column;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .nav-item:hover {
+        background: #151920;
+        color: var(--text);
+      }
+      .nav-item-active {
+        background: #151920;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .main {
+        flex: 1;
+        background: var(--bg);
+        padding: 2rem;
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #111318;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 14px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 24px;
+      }
+      .search-icon {
+        color: #98a0ab;
+      }
+      .search-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text);
+        font-size: 0.95rem;
+        outline: none;
+      }
+      .search-divider {
+        color: #98a0ab;
+        font-size: 14px;
+      }
+      .content {
+        flex: 1;
+      }
+      .page-title {
+        margin: 0 0 8px 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .page-subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 24px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 10px;
+        letter-spacing: 0.04em;
+      }
+      :root {
+        color-scheme: dark;
+        --bg: #0b0c0e;
+        --panel: #111318;
+        --panel-raised: #151920;
+        --line: #242a33;
+        --line-strong: #39414d;
+        --text: #eceef1;
+        --muted: #98a0ab;
+        --accent: #7dd3a7;
+        --accent-dim: #2c5c46;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">☐</div>
+          <span>FormatScope</span>
+        </div>
+        <div class="status">local only</div>
+      </header>
+
+      <div class="shell">
+        <aside class="sidebar">
+          <nav class="nav">
+            <div class="nav-item nav-item-active">
+              <span class="nav-icon">🏠</span>
+              <span class="nav-label">Dashboard</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">📋</span>
+              <span class="nav-label">Tasks</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">📥</span>
+              <span class="nav-label">Inbox</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">📅</span>
+              <span class="nav-label">Calendar</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">👥</span>
+              <span class="nav-label">Meeting</span>
+            </div>
+            <div class="nav-item">
+              <span class="nav-icon">📦</span>
+              <span class="nav-label">Dock</span>
+            </div>
+          </nav>
+        </aside>
+
+        <main class="main">
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Search" />
+            <span class="search-divider">/</span>
+          </div>
+          <div class="content">
+            <h1 class="page-title">FormatScope</h1>
+            <p class="page-subtitle">
+              Binary format workbench — infer the structure of unknown files,
+              generate a parser, and prove it with a byte-for-byte round-trip.
+            </p>
+          </div>
+        </main>
+      </div>
+
+      <footer>
+        <span>core 0.1.0</span>
+        <span>no uploads · no telemetry</span>
+      </footer>
+    </div>
   </body>
 </html>
