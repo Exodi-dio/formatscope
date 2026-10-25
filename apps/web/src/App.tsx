@@ -46,7 +46,7 @@ class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.hasError) {
       return (
         <div
