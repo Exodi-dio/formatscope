@@ -1,4 +1,4 @@
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom/client";
 
 import { App } from "./App";
 import "./styles.css";
@@ -10,7 +10,7 @@ if (!container) {
 }
 
 try {
-  createRoot(container).render(<App />);
+  ReactDOM.render(<App />, container);
 } catch (e: unknown) {
   const message = e instanceof Error ? e.message : String(e);
   container.innerHTML = `
