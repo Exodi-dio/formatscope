@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "dev": "vite --port 5173",
     "build": "vite build"
   },
   "dependencies": {
