@@ -252,7 +252,6 @@ h1 {
   top: 0;
   height: 24px;
   display: flex;
-  content-visibility: auto;
   contain-intrinsic-size: 1000px 24px;
 }
 
