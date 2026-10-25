@@ -38,7 +38,6 @@ export function App() {
                 justifyContent: "center",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
               }}
-              >
                 ☐
               </div>
               <span style={{ fontSize: "1.25rem", fontWeight: "600", letterSpacing: "-0.02em" }}>
@@ -55,7 +54,6 @@ export function App() {
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              >
                 <span style={{ fontSize: "12px" }}>⌃</span>
               </div>
             </div>
@@ -71,12 +69,9 @@ export function App() {
               alignItems: "center",
               gap: "10px",
             }}
-            >
               <span style={{ color: "#98a0ab", marginRight: "10px" }}>🔍</span>
               <span style={{ color: "#eceef1", fontSize: "0.95rem" }}>Search</span>
-              <div style={{ marginLeft: "auto", color: "#98a0ab", fontSize: "14px" }}>
-                /
-              </div>
+              <div style={{ marginLeft: "auto", color: "#98a0ab", fontSize: "14px" }}>/</div>
             </div>
           </div>
           <div style={{ marginTop: "1.5rem" }}>
@@ -89,7 +84,6 @@ export function App() {
                 alignItems: "center",
                 gap: "10px",
               }}
-              >
                 <div style={{ color: "#7dd3a7" }}>🏠</div>
                 <span style={{ flex: 1 }}>Dashboard</span>
               </div>
@@ -102,7 +96,6 @@ export function App() {
                 alignItems: "center",
                 gap: "10px",
               }}
-              >
                 <div style={{ color: "#7dd3a7" }}>📋</div>
                 <span style={{ flex: 1 }}>Tasks</span>
               </div>
@@ -114,7 +107,6 @@ export function App() {
                 alignItems: "center",
                 gap: "10px",
               }}
-              >
                 <div style={{ color: "#98a0ab" }}>📥</div>
                 <span style={{ flex: 1 }}>Inbox</span>
               </div>
@@ -126,7 +118,6 @@ export function App() {
                 alignItems: "center",
                 gap: "10px",
               }}
-              >
                 <div style={{ color: "#98a0ab" }}>📅</div>
                 <span style={{ flex: 1 }}>Calendar</span>
               </div>
@@ -138,7 +129,6 @@ export function App() {
                 alignItems: "center",
                 gap: "10px",
               }}
-              >
                 <div style={{ color: "#98a0ab" }}>👥</div>
                 <span style={{ flex: 1 }}>Meeting</span>
               </div>
@@ -150,7 +140,6 @@ export function App() {
                 alignItems: "center",
                 gap: "10px",
               }}
-              >
                 <div style={{ color: "#555" }}>📦</div>
                 <span style={{ flex: 1 }}>Dock</span>
               </div>
