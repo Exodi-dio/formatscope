@@ -23,7 +23,7 @@ export async function scan(args: string[]): Promise<number> {
   let bytes: Uint8Array;
 
   try {
-    bytes = fs.readFileSync(filePath);
+    bytes = fs.readFileSync(filePath) as unknown as Uint8Array;
   } catch (err) {
     console.error(`Cannot read file: ${err instanceof Error ? err.message : String(err)}`);
     return 2;
