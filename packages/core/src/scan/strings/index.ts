@@ -18,7 +18,7 @@ export function scanStrings(bytes: Uint8Array): Hypothesis[] {
   let start = -1;
 
   for (let i = 0; i < bytes.byteLength; i++) {
-    if (isPrintable(bytes[i])) {
+    if (isPrintable(bytes[i]!)) {
       if (start === -1) start = i;
     } else if (start !== -1) {
       const length = i - start;

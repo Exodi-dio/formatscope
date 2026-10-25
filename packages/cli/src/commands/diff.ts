@@ -13,8 +13,8 @@ export async function diff(args: string[]): Promise<number> {
   let bytes2: Uint8Array;
 
   try {
-    bytes1 = Uint8Array.from(await readFile(filePath1));
-    bytes2 = Uint8Array.from(await readFile(filePath2));
+    bytes1 = Buffer.from(await readFile(filePath1));
+    bytes2 = Buffer.from(await readFile(filePath2));
   } catch (err) {
     console.error(`Cannot read file: ${err instanceof Error ? err.message : String(err)}`);
     return 2;

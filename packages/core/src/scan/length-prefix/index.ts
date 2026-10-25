@@ -7,13 +7,12 @@ export interface LengthPrefixCandidate {
 export function scanLengthPrefix(bytes: Uint8Array): ScoredHypothesis[] {
   const hypotheses: ScoredHypothesis[] = [];
 
-  // u32 LE length prefix at 4-byte boundaries
   for (let offset = 0; offset + 4 <= bytes.byteLength; offset += 4) {
     const lengthValue =
-      bytes[offset] |
-      (bytes[offset + 1] << 8) |
-      (bytes[offset + 2] << 16) |
-      (bytes[offset + 3] << 24);
+      bytes[offset]! |
+      (bytes[offset + 1]! << 8) |
+      (bytes[offset + 2]! << 16) |
+      (bytes[offset + 3]! << 24);
 
     if (lengthValue < 4 || lengthValue % 4 !== 0) continue;
     const targetOffset = offset + 4 + lengthValue;
@@ -31,9 +30,8 @@ export function scanLengthPrefix(bytes: Uint8Array): ScoredHypothesis[] {
     });
   }
 
-  // u16 LE length prefix at 2-byte boundaries
   for (let offset = 0; offset + 2 <= bytes.byteLength; offset += 2) {
-    const lengthValue = bytes[offset] | (bytes[offset + 1] << 8);
+    const lengthValue = bytes[offset]! | (bytes[offset + 1]! << 8);
 
     if (lengthValue < 2) continue;
     const targetOffset = offset + 2 + lengthValue;
