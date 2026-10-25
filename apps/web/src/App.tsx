@@ -42,7 +42,7 @@ class ErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(_: Error): { hasError: boolean } {
+  static getDerivedStateFromError(error: Error) {
     return { hasError: true };
   }
 
@@ -236,7 +236,8 @@ export function App() {
   }, [handleFile]);
 
   return (
-    <div className="app" onDragOver={handleDragOver} onDrop={handleDrop}>
+    <ErrorBoundary>
+      <div className="app" onDragOver={handleDragOver} onDrop={handleDrop}>
       <header className="topbar">
         <a className="brand" href="./" aria-label="FormatScope home">
           <span className="brand-mark" aria-hidden="true">
@@ -414,6 +415,7 @@ export function App() {
         <span>core 0.1.0</span>
         <span>no uploads · no telemetry</span>
       </footer>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
