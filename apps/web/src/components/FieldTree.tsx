@@ -45,7 +45,6 @@ export function FieldTree({
 
 interface FieldNodeProps {
   field: Field;
-  path: string;
   depth: number;
   onClick: (offset: number) => void;
   highlightedOffset: number | null;
@@ -53,12 +52,10 @@ interface FieldNodeProps {
 
 function FieldNode({
   field,
-  path,
   depth,
   onClick,
   highlightedOffset,
 }: FieldNodeProps) {
-  const pad = "  ".repeat(depth);
   const isHighlighted =
     highlightedOffset !== null &&
     highlightedOffset >= field.offset &&

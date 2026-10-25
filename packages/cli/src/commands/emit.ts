@@ -17,7 +17,7 @@ export async function emit(args: string[]): Promise<number> {
     return 2;
   }
 
-  let schema: any;
+  let schema: Record<string, unknown>;
   try {
     schema = JSON.parse(schemaText);
   } catch (err) {
@@ -25,7 +25,7 @@ export async function emit(args: string[]): Promise<number> {
     return 2;
   }
 
-  const result = codegen(schema as any);
+  const result = codegen(schema as Record<string, unknown>);
 
   if (outputPath) {
     import("node:fs/promises").then(({ writeFile }) => {

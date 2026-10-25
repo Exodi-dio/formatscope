@@ -8,10 +8,6 @@ export interface Hypothesis {
 
 const IP_PRIOR = 0.70;
 
-function isValidOctet(b: number): boolean {
-  return b >= 0 && b <= 255;
-}
-
 export function scanIPs(bytes: Uint8Array): Hypothesis[] {
   const hypotheses: Hypothesis[] = [];
 

@@ -12,7 +12,6 @@ import {
   scanPE,
   scanELF,
   resolve,
-  opaqueSchema,
   type Schema,
 } from "@formatscope/core";
 
