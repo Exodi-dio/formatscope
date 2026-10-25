@@ -8,13 +8,21 @@ export function App() {
         fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
-      <div style={{ maxWidth: "1200px", width: "100%", margin: "0 auto", padding: "2rem" }}>
+      <div
+        style={{
+          maxWidth: "1200px",
+          width: "100%",
+          margin: "0 auto",
+          padding: "2rem",
+        }}
+      >
         <div
           style={{
             background: "#111318",
             border: "1px solid #242a33",
             borderRadius: "16px",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+            boxShadow:
+              "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
           }}
         >
           <div style={{ padding: "1.5rem" }}>
@@ -66,7 +74,9 @@ export function App() {
             >
               <span style={{ color: "#98a0ab", marginRight: "10px" }}>🔍</span>
               <span style={{ color: "#eceef1", fontSize: "0.95rem" }}>Search</span>
-              <div style={{ marginLeft: "auto", color: "#98a0ab", fontSize: "14px" }}>/</div>
+              <div style={{ marginLeft: "auto", color: "#98a0ab", fontSize: "14px" }}>
+                /
+              </div>
             </div>
           </div>
           <div style={{ marginTop: "1.5rem" }}>
@@ -80,7 +90,7 @@ export function App() {
                 gap: "10px",
               }}
               >
-                <div style={{ color: "#7dd3a7" }}>🏠</span>
+                <div style={{ color: "#7dd3a7" }}>🏠</div>
                 <span style={{ flex: 1 }}>Dashboard</span>
               </div>
               <div style={{
