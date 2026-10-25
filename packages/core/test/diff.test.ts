@@ -1,20 +1,22 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  diff,
-  type DiffResult,
-} from "../src/diff/index";
-import {
-  decode,
-  opaqueSchema,
-  type Document,
-} from "../src/index";
+import { diff } from "../src/diff/index";
+import { type Document } from "../src/index";
+
+type AnyField = {
+  kind: string;
+  offset: number;
+  length: number;
+  confidence: number;
+  evidence: readonly string[];
+  [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+};
 
 function makeSchema(
-  fields: readonly { kind: string; offset: number; length: number }[],
+  fields: readonly AnyField[],
   totalLength: number,
-): ReturnType<typeof opaqueSchema> & { root: any } {
-  const root: any = {
+): { version: 1; byteLength: number; root: any } { // eslint-disable-line @typescript-eslint/no-explicit-any
+  const root: any = { // eslint-disable-line @typescript-eslint/no-explicit-any
     kind: "struct",
     offset: 0,
     length: totalLength,
@@ -26,14 +28,11 @@ function makeSchema(
       evidence: [],
     })),
   };
-  return { version: 1, byteLength: totalLength, root } as any;
+  return { version: 1, byteLength: totalLength, root } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
-function makeDoc(
-  schema: any,
-  values: any[],
-): Document {
-  const root: any = {
+function makeDoc(schema: any, values: any[]): Document { // eslint-disable-line @typescript-eslint/no-explicit-any
+  const root: any = { // eslint-disable-line @typescript-eslint/no-explicit-any
     kind: "struct",
     children: values.map((v, i) => {
       const f = schema.root.fields[i];
@@ -67,7 +66,7 @@ describe("diff", () => {
       added: 0,
       removed: 0,
       changed: 0,
-      unchanged: 2, // root + child
+      unchanged: 2,
     });
   });
 
