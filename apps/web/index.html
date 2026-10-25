@@ -59,13 +59,95 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
+    .shell {
+      display: flex;
+      flex: 1;
+      background: var(--bg);
+    }
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: #111318;
+      border-right: 1px solid var(--line);
+    }
+    .nav {
+      display: flex;
+      flex-direction: column;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background: #151920;
+      color: var(--text);
+    }
+    .nav-item-active {
+      background: #151920;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .main {
+      flex: 1;
+      background: var(--bg);
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #111318;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+      margin-bottom: 24px;
+    }
+    .search-icon {
+      color: #98a0ab;
+    }
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .search-divider {
+      color: #98a0ab;
+      font-size: 14px;
+    }
+    .content {
+      flex: 1;
+    }
+    .page-title {
+      margin: 0 0 12px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .page-subtitle {
+      margin: 0 0 16px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
     .drop-zone {
       border: 2px dashed var(--line);
       border-radius: 16px;
-      padding: 3rem 2rem;
+      padding: 40px 24px;
       text-align: center;
       background: #111318;
-      margin: 2rem 0;
+      margin-bottom: 24px;
       cursor: pointer;
     }
     .drop-zone:hover {
@@ -232,6 +314,11 @@
       color: #ff6b6b;
       border: 1px solid rgba(255, 107, 107, 0.2);
     }
+    .verify-offset {
+      color: #98a0ab;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+    }
     .empty-state {
       text-align: center;
       color: var(--muted);
@@ -276,47 +363,90 @@
       <div class="status">local only</div>
     </header>
 
-    <div class="app-content">
-      <div class="drop-zone">
-        <div class="drop-zone-mark">
-          <span>0x00</span>
-          <span>0xff</span>
+    <div class="shell">
+      <aside class="sidebar">
+        <nav class="nav">
+          <div class="nav-item nav-item-active">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Dashboard</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">Tasks</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📥</span>
+            <span class="nav-label">Inbox</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📅</span>
+            <span class="nav-label">Calendar</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span class="nav-label">Meeting</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">📦</span>
+            <span class="nav-label">Dock</span>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search" />
+          <span class="search-divider">/</span>
         </div>
-        <input type="file" id="file-input" class="file-input" />
-        <label class="drop-trigger" style="cursor: pointer;">
-          <h2>Drop a binary file</h2>
-          <p>Infer structure, generate parser, verify byte-for-byte round-trip. Nothing leaves this tab.</p>
-        </label>
-      </div>
+        <div class="content">
+          <h1 class="page-title">FormatScope</h1>
+          <p class="page-subtitle">
+            Binary format workbench — infer structure, generate parser, prove with round-trip.
+          </p>
 
-      <div class="file-info">
-        <h3 id="file-name">No file loaded</h3>
-        <div class="file-info-item">
-          <span class="label">Size</span>
-          <span id="file-size">—</span>
-        </div>
-        <div class="file-info-item">
-          <span class="label">Type</span>
-          <span id="file-type">—</span>
-        </div>
-      </div>
+          <div class="drop-zone">
+            <div class="drop-zone-mark">
+              <span>0x00</span>
+              <span>0xff</span>
+            </div>
+            <input type="file" id="file-input" class="file-input" />
+            <label class="drop-trigger" style="cursor: pointer;">
+              <h2>Drop a binary file</h2>
+              <p>Infer structure, generate parser, verify round-trip. Nothing leaves this tab.</p>
+            </label>
+          </div>
 
-      <div class="inference-section">
-        <h3>Inference Results</h3>
-        <div id="inference-results"></div>
-      </div>
+          <div class="file-info">
+            <h3 id="file-name">No file loaded</h3>
+            <div class="file-info-item">
+              <span class="label">Size</span>
+              <span id="file-size">—</span>
+            </div>
+            <div class="file-info-item">
+              <span class="label">Type</span>
+              <span id="file-type">—</span>
+            </div>
+          </div>
 
-      <div class="scan-section">
-        <h3>Scan Results</h3>
-        <div id="scan-results"></div>
-      </div>
+          <div class="inference-section">
+            <h3>Inference Results</h3>
+            <div id="inference-results"></div>
+          </div>
 
-      <div class="verify-section">
-        <div class="verify-header">
-          <span class="verify-badge" id="verify-badge">
-            <span style="color:#7dd3a7">●</span> verify ok
-          </span>
-          <span class="verify-offset">0x0000</span>
+          <div class="scan-section">
+            <h3>Scan Results</h3>
+            <div id="scan-results"></div>
+          </div>
+
+          <div class="verify-section">
+            <div class="verify-header">
+              <span class="verify-badge" id="verify-badge">
+                <span style="color:#7dd3a7">●</span> verify ok
+              </span>
+              <span class="verify-offset">0x0000</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
