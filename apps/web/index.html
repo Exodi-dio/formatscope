@@ -30,8 +30,10 @@
         <button onclick="window.location.reload()">Refresh</button>
       </div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Test: if JS runs, change body background to yellow
+      document.body.style.background = "#ffeb3b";
+      document.body.style.color = "#000000";
       window.addEventListener('error', function(e) {
         var el = document.getElementById('mount-error-msg');
         if (el) el.textContent = 'JS Error: ' + (e.message || 'unknown');
@@ -43,5 +45,6 @@
         document.getElementById('mount-error').style.display = 'block';
       });
     </script>
+    <script type="module" crossorigin src="/src/main.tsx"></script>
   </body>
 </html>
