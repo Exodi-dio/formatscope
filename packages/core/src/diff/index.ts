@@ -118,7 +118,9 @@ export function diffDocuments(
 ): DiffResult {
   const changes: DiffEntry[] = [];
 
-  diffNode(oldDoc?.root ?? null, newDoc?.root ?? null, "root", changes);
+  const oldRoot = oldDoc ? oldDoc.root : null;
+  const newRoot = newDoc ? newDoc.root : null;
+  diffNode(oldRoot, newRoot, "root", changes);
 
   let added = 0;
   let removed = 0;

@@ -7,14 +7,13 @@ export interface ChecksumCandidate {
 export function scanChecksum(bytes: Uint8Array): ScoredHypothesis[] {
   const hypotheses: ScoredHypothesis[] = [];
 
-  // CRC32 at end of file
   for (let regionEnd = 4; regionEnd <= bytes.byteLength; regionEnd++) {
     const checksumOffset = regionEnd - 4;
     const storedCRC =
-      bytes[checksumOffset] |
-      (bytes[checksumOffset + 1] << 8) |
-      (bytes[checksumOffset + 2] << 16) |
-      (bytes[checksumOffset + 3] << 24);
+      bytes[checksumOffset]! |
+      (bytes[checksumOffset + 1]! << 8) |
+      (bytes[checksumOffset + 2]! << 16) |
+      (bytes[checksumOffset + 3]! << 24);
 
     const computedCRC = crc32(bytes.subarray(0, checksumOffset));
 
@@ -28,14 +27,13 @@ export function scanChecksum(bytes: Uint8Array): ScoredHypothesis[] {
     }
   }
 
-  // Adler32 at end of file
   for (let regionEnd = 4; regionEnd <= bytes.byteLength; regionEnd++) {
     const checksumOffset = regionEnd - 4;
     const storedAdler =
-      bytes[checksumOffset] |
-      (bytes[checksumOffset + 1] << 8) |
-      (bytes[checksumOffset + 2] << 16) |
-      (bytes[checksumOffset + 3] << 24);
+      bytes[checksumOffset]! |
+      (bytes[checksumOffset + 1]! << 8) |
+      (bytes[checksumOffset + 2]! << 16) |
+      (bytes[checksumOffset + 3]! << 24);
 
     const computedAdler = adler32(bytes.subarray(0, checksumOffset));
 
@@ -55,7 +53,7 @@ export function scanChecksum(bytes: Uint8Array): ScoredHypothesis[] {
 function crc32(data: Uint8Array): number {
   let crc = 0xffffffff;
   for (let i = 0; i < data.byteLength; i++) {
-    crc ^= data[i];
+    crc ^= data[i]!;
     for (let j = 0; j < 8; j++) {
       if (crc & 1) {
         crc = (crc >>> 1) ^ 0xedb88320;
@@ -73,7 +71,7 @@ function adler32(data: Uint8Array): number {
   const MOD = 65521;
 
   for (let i = 0; i < data.byteLength; i++) {
-    a = (a + data[i]) % MOD;
+    a = (a + data[i]!) % MOD;
     b = (b + a) % MOD;
   }
 

@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { diff as diffDocs, decode } from "@formatscope/core";
+import { diff as diffDocs, decode, type Schema } from "@formatscope/core";
 
 export async function diff(args: string[]): Promise<number> {
   if (args.length !== 2) {
@@ -13,14 +13,14 @@ export async function diff(args: string[]): Promise<number> {
   let bytes2: Uint8Array;
 
   try {
-    bytes1 = new Uint8Array(await readFile(filePath1) as Buffer);
-    bytes2 = new Uint8Array(await readFile(filePath2) as Buffer);
+    bytes1 = Uint8Array.from(await readFile(filePath1));
+    bytes2 = Uint8Array.from(await readFile(filePath2));
   } catch (err) {
     console.error(`Cannot read file: ${err instanceof Error ? err.message : String(err)}`);
     return 2;
   }
 
-  const schema1 = {
+  const schema1: Schema = {
     version: 1,
     byteLength: bytes1.byteLength,
     root: {
@@ -31,7 +31,7 @@ export async function diff(args: string[]): Promise<number> {
       evidence: [],
     },
   };
-  const schema2 = {
+  const schema2: Schema = {
     version: 1,
     byteLength: bytes2.byteLength,
     root: {
