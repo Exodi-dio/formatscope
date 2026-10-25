@@ -107,7 +107,7 @@ function diffNode(
     for (let i = 0; i < maxLen; i++) {
       const oldChild = i < oldChildren.length ? oldChildren[i] : null;
       const newChild = i < newChildren.length ? newChildren[i] : null;
-      diffNode(oldChild, newChild, `${path}[${i}]`, changes);
+      diffNode(oldChild ?? null, newChild ?? null, `${path}[${i}]`, changes);
     }
   }
 }
