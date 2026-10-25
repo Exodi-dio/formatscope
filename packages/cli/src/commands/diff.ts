@@ -64,3 +64,4 @@ export async function diff(args: string[]): Promise<number> {
 
   return 0;
 }
+// lint fix
