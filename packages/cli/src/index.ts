@@ -4,7 +4,6 @@ import { inspect } from "./commands/inspect.js";
 import { infer } from "./commands/infer.js";
 import { emit } from "./commands/emit.js";
 import { verify } from "./commands/verify.js";
-import { diff } from "./commands/diff.js";
 import { scan } from "./commands/scan.js";
 import { strings } from "./commands/strings.js";
 import { magic } from "./commands/magic.js";
@@ -18,7 +17,6 @@ const commands: Record<string, (args: string[]) => Promise<number>> = {
   infer,
   emit,
   verify,
-  diff,
   scan,
   strings,
   magic,
@@ -38,7 +36,6 @@ if (!command || command === "--help" || command === "-h") {
   console.log("  infer  <file>     Infer structure and show schema");
   console.log("  emit   <schema>   Generate a TypeScript parser from schema");
   console.log("  verify <file>     Verify byte-for-byte round-trip");
-  console.log("  diff   <f1> <f2>  Semantic diff between two files");
   console.log("  scan   <file>     Show all inference rules that matched");
   console.log("  strings <file>    List printable string runs");
   console.log("  magic  <file>     List detected magic headers");
