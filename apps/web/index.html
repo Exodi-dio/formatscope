@@ -13,9 +13,35 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0c0e'/%3E%3Cpath d='M8 9h6v5H8zm0 9h16v5H8z' fill='%237dd3a7'/%3E%3C/svg%3E"
     />
     <title>FormatScope — binary format workbench</title>
+    <style>
+      body { margin: 0; background: #0b0c0e; color: #eceef1; font-family: system-ui, sans-serif; }
+      #root { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      #mount-error { text-align: center; padding: 2rem; }
+      #mount-error h2 { color: #ff6b6b; margin-bottom: 1rem; }
+      #mount-error p { color: #98a0ab; max-width: 500px; margin: 0 auto; }
+      #mount-error button { padding: 0.8rem 1.5rem; background: #7dd3a7; color: #0b0c0e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="mount-error">
+        <h2>FormatScope failed to load</h2>
+        <p id="mount-error-msg">JavaScript error during app initialization</p>
+        <button onclick="window.location.reload()">Refresh</button>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener('error', function(e) {
+        var el = document.getElementById('mount-error-msg');
+        if (el) el.textContent = 'JS Error: ' + (e.message || 'unknown');
+        document.getElementById('mount-error').style.display = 'block';
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        var el = document.getElementById('mount-error-msg');
+        if (el) el.textContent = 'Unhandled rejection: ' + (e.reason || 'unknown');
+        document.getElementById('mount-error').style.display = 'block';
+      });
+    </script>
   </body>
 </html>
