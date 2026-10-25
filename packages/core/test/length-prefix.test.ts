@@ -11,6 +11,18 @@ function u32LE(value: number): Uint8Array {
   return out;
 }
 
+function concatBytes(parts: readonly Uint8Array[]): Uint8Array {
+  let total = 0;
+  for (const part of parts) total += part.byteLength;
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    out.set(part, offset);
+    offset += part.byteLength;
+  }
+  return out;
+}
+
 describe("scanLengthPrefix", () => {
   it("detects valid length prefix", () => {
     // offset 0: u32 LE = 8, meaning 8 bytes of payload follow at offset 4
@@ -22,12 +34,12 @@ describe("scanLengthPrefix", () => {
     // u32: offset 0, length 12 (4 header + 8 payload)
     // u16: offset 0, length 10 (2 header + 8 payload)
     const byLength = [...hypotheses].sort((a, b) => a.length - b.length);
-    expect(byLength[0].offset).toBe(0);
-    expect(byLength[0].length).toBe(10);
-    expect(byLength[1].offset).toBe(0);
-    expect(byLength[1].length).toBe(12);
-    expect(byLength[0].confidence).toBeGreaterThan(0);
-    expect(byLength[1].confidence).toBeGreaterThan(0);
+    expect(byLength[0]!.offset).toBe(0);
+    expect(byLength[0]!.length).toBe(10);
+    expect(byLength[1]!.offset).toBe(0);
+    expect(byLength[1]!.length).toBe(12);
+    expect(byLength[0]!.confidence).toBeGreaterThan(0);
+    expect(byLength[1]!.confidence).toBeGreaterThan(0);
   });
 
   it("rejects length that points past file end", () => {
@@ -38,7 +50,6 @@ describe("scanLengthPrefix", () => {
 
   it("rejects non-4-byte-aligned length", () => {
     // u32 LE = 5 (not 4-byte aligned), u16 LE = 5 (length 7, fits in 10 bytes)
-    // u16 also matches here since 7 <= 10, so we get 1 hypothesis
     const bytes = concatBytes([u32LE(5), new Uint8Array(5)]);
     const hypotheses = scanLengthPrefix(bytes);
     expect(hypotheses).toHaveLength(1);
@@ -63,18 +74,6 @@ describe("scanLengthPrefix", () => {
     // First record at offset 0
     const first = hypotheses.find((h) => h.offset === 0);
     expect(first).toBeDefined();
-    expect(first!.length).toBe(8);
+    expect(first!.length).toBe(8); // 4 (header) + 4 (payload)
   });
 });
-
-function concatBytes(parts: readonly Uint8Array[]): Uint8Array {
-  let total = 0;
-  for (const part of parts) total += part.byteLength;
-  const out = new Uint8Array(total);
-  let offset = 0;
-  for (const part of parts) {
-    out.set(part, offset);
-    offset += part.byteLength;
-  }
-  return out;
-}
