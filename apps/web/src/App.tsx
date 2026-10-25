@@ -26,13 +26,69 @@ function entropyToTone(entropy: number): number {
   return 6;
 }
 
+// Error boundary to catch render errors and show a fallback instead of a blank screen
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(_: Error) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div
+          style={{
+            padding: "2rem",
+            textAlign: "center",
+            color: "#eceef1",
+            background: "#0b0c0e",
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <h2>FormatScope failed to load</h2>
+          <p>Please refresh the page or try a different browser.</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "0.8rem 1.5rem",
+              background: "#7dd3a7",
+              color: "#0b0c0e",
+              border: "none",
+              borderRadius: "8px",
+              fontWeight: "600",
+              cursor: "pointer",
+              marginTop: "1rem",
+            }}
+          >
+            Refresh
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export function App() {
   const [file, setFile] = useState<File | null>(null);
   const [bytes, setBytes] = useState<Uint8Array | null>(null);
   const [regions, setRegions] = useState<EntropyRegion[] | null>(null);
   const [schema, setSchema] = useState<Schema | null>(null);
   const [verifyResult, setVerifyResult] = useState<VerifyResult | null>(null);
-  const [progress, setProgress] = useState<{ phase: string; pct: number } | null>(null);
+  const [progress, setProgress] = useState<{ phase: string; pct: number } | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -236,8 +292,7 @@ export function App() {
                   className="grid-container"
                   style={{ height: CONTAINER_HEIGHT }}
                   onScroll={(event) =>
-                    setScrollTop(event.currentTarget.scrollTop)
-                  }
+                    setScrollTop(event.currentTarget.scrollTop)}
                 >
                   <div
                     className="grid-spacer"
