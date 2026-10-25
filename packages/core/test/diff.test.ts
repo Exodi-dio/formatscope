@@ -7,8 +7,8 @@ type AnyField = {
   kind: string;
   offset: number;
   length: number;
-  confidence: number;
-  evidence: readonly string[];
+  confidence?: number;
+  evidence?: readonly string[];
   [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
